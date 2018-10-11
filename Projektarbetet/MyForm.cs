@@ -14,6 +14,7 @@ namespace Projektarbetet
         public MyForm()
         {
             Console.WriteLine("Hello Novak");
+            Console.WriteLine("Hello Tomas");
         }
     }
 }
