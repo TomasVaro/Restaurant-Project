@@ -13,7 +13,7 @@ namespace Projektarbetet
     {
         public MyForm()
         {
-            Console.WriteLine("Hello");
+            Console.WriteLine("Hello Novak");
         }
     }
 }
