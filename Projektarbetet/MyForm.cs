@@ -11,6 +11,13 @@ namespace Projektarbetet
 {
     class MyForm : Form
     {
+        public class Product
+        {
+            public string Index;
+            public int Price;
+            public string Name;
+            public string Description;
+        };
         public MyForm()
         {
            WindowState = FormWindowState.Maximized;      //anger storleken på fönstret
@@ -62,8 +69,10 @@ namespace Projektarbetet
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Dock = DockStyle.Fill,
                 Text = "Förrätter"
-            };
+                
+        };
             table.Controls.Add(starter, 0, 2);
+            
             //starter.SelectedIndexChanged += ComboboxChanged;
 
 
@@ -119,7 +128,7 @@ namespace Projektarbetet
             table.SetRowSpan(picture, 3);
 
 
-            TextBox description = new TextBox
+            TextBox boxDescription = new TextBox
             {
                 Multiline = true,
                 Width = 100,
@@ -127,8 +136,8 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill
 
             };
-            table.Controls.Add(description, 1, 4);
-            table.SetRowSpan(description, 2);
+            table.Controls.Add(boxDescription, 1, 4);
+            table.SetRowSpan(boxDescription, 2);
 
 
             Button add = new Button
@@ -185,6 +194,73 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill
             };
             table.Controls.Add(shop, 2, 7);
+
+            List<Product> listStarters = new List<Product>();
+            List<Product> listWarmDishes = new List<Product>();
+            List<Product> listDesserts = new List<Product>();
+            List<Product> listDrinks = new List<Product>();
+
+            string[] lines = File.ReadAllLines("products.csv");
+            
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(',');
+                string index = parts[0];
+                int price = int.Parse(parts[1]);
+                string name = parts[2];
+                string description = parts[3];
+
+                if (index.StartsWith("s"))
+                {
+                    listStarters.Add(new Product
+                    {
+                        Price = price,
+                        Name = name,
+                        Description = description
+                    });
+
+                }
+                else if (index.StartsWith("w"))
+                {
+                    listWarmDishes.Add(new Product
+                    {
+                        Price = price,
+                        Name = name,
+                        Description = description
+                    });
+                }
+                else if (index.StartsWith("d"))
+                {
+                    listDesserts.Add(new Product
+                    {
+                        Price = price,
+                        Name = name,
+                        Description = description
+                    });
+                }
+                else if (index.StartsWith("f"))
+                {
+                    listDrinks.Add(new Product
+                    {
+                        Price = price,
+                        Name = name,
+                        Description = description
+                    });
+                }
+
+
+
+
+
+
+            }
+            foreach (Product p in listStarters)
+            {
+                string info = (p.Name + " "+ p.Price + " kr");
+                starter.Items.Add(info);
+            };
+
+
 
 
         }
