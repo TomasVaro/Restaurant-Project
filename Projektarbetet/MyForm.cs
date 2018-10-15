@@ -20,38 +20,39 @@ namespace Projektarbetet
         };
         public MyForm()
         {
-           WindowState = FormWindowState.Maximized;      //anger storleken på fönstret
-
+            WindowState = FormWindowState.Maximized;      //anger storleken på fönstret
 
             TableLayoutPanel table = new TableLayoutPanel
             {
-                RowCount = 9,
+                RowCount = 12,
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
-                CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
+                //CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
             };
             Controls.Add(table);
 
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 12));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 5));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 12));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 12));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 12));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 12));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 12));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 12));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 12));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
 
             Label restaurantName = new Label
             {
-                Text = "Restaurang SeeShark",
+                Text = "Restaurang SeeSharp",
                 TextAlign = ContentAlignment.MiddleCenter,
                 Dock = DockStyle.Fill,
                 Font = new Font("Lucida Console", 30),
-                AutoSize = true
             };
             table.Controls.Add(restaurantName);
             table.SetColumnSpan(restaurantName, 3);
@@ -60,20 +61,36 @@ namespace Projektarbetet
             {
                 Text = "Meny",
                 Font = new Font("Times New Roman", 18),
-                Dock = DockStyle.Fill
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleCenter
             };
             table.Controls.Add(menu, 0, 1);
+
+            Label startersLabel = new Label
+            {
+                Text = "Förrätter",
+                Font = new Font("Times New Roman", 14),
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.BottomLeft
+            };
+            table.Controls.Add(startersLabel, 0, 2);
 
             ComboBox starter = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Dock = DockStyle.Fill,
-                Text = "Förrätter"
-                
-        };
-            table.Controls.Add(starter, 0, 2);
-            
+            };
+            table.Controls.Add(starter, 0, 3);
             //starter.SelectedIndexChanged += ComboboxChanged;
+
+            Label warmDishesLabel = new Label
+            {
+                Text = "Varmrätter",
+                Font = new Font("Times New Roman", 14),
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.BottomLeft
+            };
+            table.Controls.Add(warmDishesLabel, 0, 4);
 
 
             ComboBox warmDishes = new ComboBox
@@ -82,18 +99,36 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 Text = "Varmrätter"
             };
-            table.Controls.Add(warmDishes, 0, 3);
+            table.Controls.Add(warmDishes, 0, 5);
             //warmDishes.SelectedIndexChanged += ComboboxChanged
 
+            Label dessertsLabel = new Label
+            {
+                Text = "Efterrätter",
+                Font = new Font("Times New Roman", 14),
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.BottomLeft
+            };
+            table.Controls.Add(dessertsLabel, 0, 6);
 
-            ComboBox deserts = new ComboBox
+
+            ComboBox desserts = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Dock = DockStyle.Fill,
                 Text = "Efterrätter"
             };
-            table.Controls.Add(deserts, 0, 4);
-            //deserts.SelectedIndexChanged += ComboboxChanged;
+            table.Controls.Add(desserts, 0, 7);
+            //desserts.SelectedIndexChanged += ComboboxChanged;
+
+            Label drinksLabel = new Label
+            {
+                Text = "Dricka",
+                Font = new Font("Times New Roman", 14),
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.BottomLeft
+            };
+            table.Controls.Add(drinksLabel, 0, 8);
 
 
             ComboBox drinks = new ComboBox
@@ -102,7 +137,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 Text = "Dricka"
             };
-            table.Controls.Add(drinks, 0, 5);
+            table.Controls.Add(drinks, 0, 9);
             //drinks.SelectedIndexChanged += ComboboxChanged;
 
             /*
@@ -125,7 +160,7 @@ namespace Projektarbetet
                 Height = 150
             };
             table.Controls.Add(picture, 1, 1);
-            table.SetRowSpan(picture, 3);
+            table.SetRowSpan(picture, 6);
 
 
             TextBox boxDescription = new TextBox
@@ -134,10 +169,9 @@ namespace Projektarbetet
                 Width = 100,
                 Height = 150,
                 Dock = DockStyle.Fill
-
             };
-            table.Controls.Add(boxDescription, 1, 4);
-            table.SetRowSpan(boxDescription, 2);
+            table.Controls.Add(boxDescription, 1, 7);
+            table.SetRowSpan(boxDescription, 3);
 
 
             Button add = new Button
@@ -146,7 +180,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 Font = new Font("Times New Roman", 14)
             };
-            table.Controls.Add(add, 1, 6);
+            table.Controls.Add(add, 1, 10);
 
 
             Button remove = new Button
@@ -155,14 +189,15 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill
             };
-            table.Controls.Add(remove, 1, 7);
+            table.Controls.Add(remove, 1, 11);
 
 
             Label order = new Label
             {
                 Text = "Beställning",
                 Font = new Font("Times New Roman", 18),
-                Dock = DockStyle.Fill
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleCenter
             };
             table.Controls.Add(order, 2, 1);
 
@@ -175,7 +210,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill
             };
             table.Controls.Add(orderList, 2, 2);
-            table.SetRowSpan(orderList, 4);
+            table.SetRowSpan(orderList, 8);
 
 
             Label totalPrice = new Label
@@ -184,7 +219,7 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill
             };
-            table.Controls.Add(totalPrice, 2, 6);
+            table.Controls.Add(totalPrice, 2, 10);
 
 
             Button shop = new Button
@@ -193,7 +228,7 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill
             };
-            table.Controls.Add(shop, 2, 7);
+            table.Controls.Add(shop, 2, 11);
 
             List<Product> listStarters = new List<Product>();
             List<Product> listWarmDishes = new List<Product>();
@@ -201,7 +236,6 @@ namespace Projektarbetet
             List<Product> listDrinks = new List<Product>();
 
             string[] lines = File.ReadAllLines("products.csv");
-            
             foreach (string line in lines)
             {
                 string[] parts = line.Split(',');
@@ -247,20 +281,24 @@ namespace Projektarbetet
                         Description = description
                     });
                 }
-
-
-
-
-
-
             }
+
             foreach (Product p in listStarters)
             {
-                string info = (p.Name + " "+ p.Price + " kr");
-                starter.Items.Add(info);
+                starter.Items.Add(p.Name + " - " + p.Price + " kr");
             };
-
-
+            foreach (Product p in listWarmDishes)
+            {
+                warmDishes.Items.Add(p.Name + " - " + p.Price + " kr");
+            };
+            foreach (Product p in listDesserts)
+            {
+                desserts.Items.Add(p.Name + " - " + p.Price + " kr");
+            };
+            foreach (Product p in listDrinks)
+            {
+                drinks.Items.Add(p.Name + " - " + p.Price + " kr");
+            };
 
 
         }
