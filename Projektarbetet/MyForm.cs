@@ -27,7 +27,7 @@ namespace Projektarbetet
                 RowCount = 12,
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
-                //CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
+                CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
             };
             Controls.Add(table);
 
@@ -57,14 +57,14 @@ namespace Projektarbetet
             table.Controls.Add(restaurantName);
             table.SetColumnSpan(restaurantName, 3);
 
-            Label menu = new Label
+            Label menuLabel = new Label
             {
                 Text = "Meny",
                 Font = new Font("Times New Roman", 18),
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            table.Controls.Add(menu, 0, 1);
+            table.Controls.Add(menuLabel, 0, 1);
 
             Label startersLabel = new Label
             {
@@ -81,7 +81,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
             };
             table.Controls.Add(starter, 0, 3);
-            //starter.SelectedIndexChanged += ComboboxChanged;
+            starter.SelectedIndexChanged += ComboboxChanged;
 
             Label warmDishesLabel = new Label
             {
@@ -139,6 +139,21 @@ namespace Projektarbetet
             };
             table.Controls.Add(drinks, 0, 9);
             //drinks.SelectedIndexChanged += ComboboxChanged;
+
+            Label discountLabel = new Label
+            {
+                Text = "Skriv in ev. rabattkod:",
+                Font = new Font("Times New Roman", 14),
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.BottomLeft
+            };
+            table.Controls.Add(discountLabel, 0, 10);
+
+            TextBox discount = new TextBox
+            {
+                Dock = DockStyle.Fill                
+            };
+            table.Controls.Add(discount, 0, 11);
 
             /*
             Label childMenue = new Label
@@ -252,7 +267,6 @@ namespace Projektarbetet
                         Name = name,
                         Description = description
                     });
-
                 }
                 else if (index.StartsWith("w"))
                 {
@@ -299,8 +313,12 @@ namespace Projektarbetet
             {
                 drinks.Items.Add(p.Name + " - " + p.Price + " kr");
             };
-
-
         }
+
+        private void ComboboxChanged(object sender, EventArgs e)
+        {
+            ComboBox c = (ComboBox)sender;
+            
+        }        
     }
 }
