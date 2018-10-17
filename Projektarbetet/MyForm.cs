@@ -18,34 +18,44 @@ namespace Projektarbetet
             public string Name;
             public string Description;
         };
+
+        public PictureBox Picture;
+        public ComboBox Starter;
+        public ComboBox WarmDishes;
+        public ComboBox Desserts;
+        public ComboBox Drinks;
+        public TableLayoutPanel Table;
+        public TextBox BoxDescription;
+
+
         public MyForm()
         {
             WindowState = FormWindowState.Maximized;      //anger storleken på fönstret
 
-            TableLayoutPanel table = new TableLayoutPanel
+            Table = new TableLayoutPanel
             {
                 RowCount = 12,
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
-                CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
+                //CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
             };
-            Controls.Add(table);
+            Controls.Add(Table);
 
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44));
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 5));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            Table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
+            Table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44));
+            Table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 5));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
 
             Label restaurantName = new Label
             {
@@ -54,8 +64,8 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 Font = new Font("Lucida Console", 30),
             };
-            table.Controls.Add(restaurantName);
-            table.SetColumnSpan(restaurantName, 3);
+            Table.Controls.Add(restaurantName);
+            Table.SetColumnSpan(restaurantName, 3);
 
             Label menuLabel = new Label
             {
@@ -64,7 +74,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            table.Controls.Add(menuLabel, 0, 1);
+            Table.Controls.Add(menuLabel, 0, 1);
 
             Label startersLabel = new Label
             {
@@ -73,15 +83,15 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.BottomLeft
             };
-            table.Controls.Add(startersLabel, 0, 2);
+            Table.Controls.Add(startersLabel, 0, 2);
 
-            ComboBox starter = new ComboBox
+            Starter = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Dock = DockStyle.Fill,
             };
-            table.Controls.Add(starter, 0, 3);
-            starter.SelectedIndexChanged += ComboboxChanged;
+            Table.Controls.Add(Starter, 0, 3);
+            Starter.SelectedIndexChanged += ComboboxChanged;
 
             Label warmDishesLabel = new Label
             {
@@ -90,16 +100,17 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.BottomLeft
             };
-            table.Controls.Add(warmDishesLabel, 0, 4);
+            Table.Controls.Add(warmDishesLabel, 0, 4);
 
 
-            ComboBox warmDishes = new ComboBox
+            WarmDishes = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Dock = DockStyle.Fill,
                 Text = "Varmrätter"
             };
-            table.Controls.Add(warmDishes, 0, 5);
+            Table.Controls.Add(WarmDishes, 0, 5);
+            WarmDishes.SelectedIndexChanged += ComboboxChanged;
             //warmDishes.SelectedIndexChanged += ComboboxChanged
 
             Label dessertsLabel = new Label
@@ -109,16 +120,17 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.BottomLeft
             };
-            table.Controls.Add(dessertsLabel, 0, 6);
+            Table.Controls.Add(dessertsLabel, 0, 6);
 
 
-            ComboBox desserts = new ComboBox
+            Desserts = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Dock = DockStyle.Fill,
                 Text = "Efterrätter"
             };
-            table.Controls.Add(desserts, 0, 7);
+            Table.Controls.Add(Desserts, 0, 7);
+            Desserts.SelectedIndexChanged += ComboboxChanged;
             //desserts.SelectedIndexChanged += ComboboxChanged;
 
             Label drinksLabel = new Label
@@ -128,16 +140,17 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.BottomLeft
             };
-            table.Controls.Add(drinksLabel, 0, 8);
+            Table.Controls.Add(drinksLabel, 0, 8);
 
 
-            ComboBox drinks = new ComboBox
+            Drinks = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Dock = DockStyle.Fill,
                 Text = "Dricka"
             };
-            table.Controls.Add(drinks, 0, 9);
+            Table.Controls.Add(Drinks, 0, 9);
+            Drinks.SelectedIndexChanged += ComboboxChanged;
             //drinks.SelectedIndexChanged += ComboboxChanged;
 
             Label discountLabel = new Label
@@ -147,13 +160,13 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.BottomLeft
             };
-            table.Controls.Add(discountLabel, 0, 10);
+            Table.Controls.Add(discountLabel, 0, 10);
 
             TextBox discount = new TextBox
             {
                 Dock = DockStyle.Fill                
             };
-            table.Controls.Add(discount, 0, 11);
+            Table.Controls.Add(discount, 0, 11);
 
             /*
             Label childMenue = new Label
@@ -162,11 +175,11 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 16),
                 Dock = DockStyle.Fill
             };
-            table.Controls.Add(childMenue, 0, 7);
+            Table.Controls.Add(childMenue, 0, 7);
             */
 
 
-            PictureBox picture = new PictureBox
+            Picture = new PictureBox
             {
                 Image = Image.FromFile("pic1.jpg"),
                 SizeMode = PictureBoxSizeMode.StretchImage,
@@ -174,19 +187,19 @@ namespace Projektarbetet
                 Width = 150,
                 Height = 150
             };
-            table.Controls.Add(picture, 1, 1);
-            table.SetRowSpan(picture, 6);
+            Table.Controls.Add(Picture, 1, 1);
+            Table.SetRowSpan(Picture, 6);
 
 
-            TextBox boxDescription = new TextBox
+            BoxDescription = new TextBox
             {
                 Multiline = true,
                 Width = 100,
                 Height = 150,
                 Dock = DockStyle.Fill
             };
-            table.Controls.Add(boxDescription, 1, 7);
-            table.SetRowSpan(boxDescription, 3);
+            Table.Controls.Add(BoxDescription, 1, 7);
+            Table.SetRowSpan(BoxDescription, 3);
 
 
             Button add = new Button
@@ -195,7 +208,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 Font = new Font("Times New Roman", 14)
             };
-            table.Controls.Add(add, 1, 10);
+            Table.Controls.Add(add, 1, 10);
 
 
             Button remove = new Button
@@ -204,7 +217,7 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill
             };
-            table.Controls.Add(remove, 1, 11);
+            Table.Controls.Add(remove, 1, 11);
 
 
             Label order = new Label
@@ -214,7 +227,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            table.Controls.Add(order, 2, 1);
+            Table.Controls.Add(order, 2, 1);
 
 
             TextBox orderList = new TextBox
@@ -224,8 +237,8 @@ namespace Projektarbetet
                 Height = 150,
                 Dock = DockStyle.Fill
             };
-            table.Controls.Add(orderList, 2, 2);
-            table.SetRowSpan(orderList, 8);
+            Table.Controls.Add(orderList, 2, 2);
+            Table.SetRowSpan(orderList, 8);
 
 
             Label totalPrice = new Label
@@ -234,7 +247,7 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill
             };
-            table.Controls.Add(totalPrice, 2, 10);
+            Table.Controls.Add(totalPrice, 2, 10);
 
 
             Button shop = new Button
@@ -243,7 +256,7 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill
             };
-            table.Controls.Add(shop, 2, 11);
+            Table.Controls.Add(shop, 2, 11);
 
             List<Product> listStarters = new List<Product>();
             List<Product> listWarmDishes = new List<Product>();
@@ -299,26 +312,57 @@ namespace Projektarbetet
 
             foreach (Product p in listStarters)
             {
-                starter.Items.Add(p.Name + " - " + p.Price + " kr");
+                Starter.Items.Add(p.Name + " - " + p.Price + " kr");
             };
             foreach (Product p in listWarmDishes)
             {
-                warmDishes.Items.Add(p.Name + " - " + p.Price + " kr");
+                WarmDishes.Items.Add(p.Name + " - " + p.Price + " kr");
             };
             foreach (Product p in listDesserts)
             {
-                desserts.Items.Add(p.Name + " - " + p.Price + " kr");
+                Desserts.Items.Add(p.Name + " - " + p.Price + " kr");
             };
             foreach (Product p in listDrinks)
             {
-                drinks.Items.Add(p.Name + " - " + p.Price + " kr");
+                Drinks.Items.Add(p.Name + " - " + p.Price + " kr");
             };
         }
 
         private void ComboboxChanged(object sender, EventArgs e)
         {
             ComboBox c = (ComboBox)sender;
-            
+            string picture = "";
+            if (sender == Starter)
+            {
+                picture = "s";
+            }
+            else if (sender == WarmDishes)
+            {
+                picture = "w";
+            }
+            else if (sender == Desserts)
+            {
+                picture = "d";
+            }
+            else
+            {
+                picture = "f";
+            }
+
+            int t = c.SelectedIndex +1;
+            Picture.Image = Image.FromFile(picture + t + ".jpg");
+            Picture.SizeMode = PictureBoxSizeMode.StretchImage;
+            Picture.Dock = DockStyle.Fill;
+            Picture.Width = 150;
+            Picture.Height = 150;            
+            Table.Controls.Add(Picture, 1, 1);
+            Table.SetRowSpan(Picture, 6);
+
+
+
+
+            //string[] filenames = Directory.GetFiles("Pictures");
+
         }        
     }
 }
