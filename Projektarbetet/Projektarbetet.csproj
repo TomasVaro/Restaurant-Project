@@ -79,6 +79,12 @@
     <Content Include="pic1.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="pic2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pic3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="s1.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

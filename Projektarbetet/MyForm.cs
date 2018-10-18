@@ -19,12 +19,12 @@ namespace Projektarbetet
             public string Description;
         };
 
-        public PictureBox Picture;
-        public ComboBox Starter;
+        public TableLayoutPanel Table;
+        public ComboBox Starters;
         public ComboBox WarmDishes;
         public ComboBox Desserts;
         public ComboBox Drinks;
-        public TableLayoutPanel Table;
+        public PictureBox Picture;
         public TextBox BoxDescription;
 
 
@@ -37,7 +37,7 @@ namespace Projektarbetet
                 RowCount = 12,
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
-                //CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
+                CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
             };
             Controls.Add(Table);
 
@@ -85,13 +85,13 @@ namespace Projektarbetet
             };
             Table.Controls.Add(startersLabel, 0, 2);
 
-            Starter = new ComboBox
+            Starters = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Dock = DockStyle.Fill,
             };
-            Table.Controls.Add(Starter, 0, 3);
-            Starter.SelectedIndexChanged += ComboboxChanged;
+            Table.Controls.Add(Starters, 0, 3);
+            Starters.SelectedIndexChanged += ComboboxChanged;
 
             Label warmDishesLabel = new Label
             {
@@ -111,7 +111,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(WarmDishes, 0, 5);
             WarmDishes.SelectedIndexChanged += ComboboxChanged;
-            //warmDishes.SelectedIndexChanged += ComboboxChanged
+            
 
             Label dessertsLabel = new Label
             {
@@ -131,7 +131,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(Desserts, 0, 7);
             Desserts.SelectedIndexChanged += ComboboxChanged;
-            //desserts.SelectedIndexChanged += ComboboxChanged;
+
 
             Label drinksLabel = new Label
             {
@@ -151,7 +151,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(Drinks, 0, 9);
             Drinks.SelectedIndexChanged += ComboboxChanged;
-            //drinks.SelectedIndexChanged += ComboboxChanged;
+
 
             Label discountLabel = new Label
             {
@@ -179,9 +179,11 @@ namespace Projektarbetet
             */
 
 
+            Random rnd = new Random();      //slumpar fram restaurang-bilden
+            int rndPicture = rnd.Next(1, 4);
             Picture = new PictureBox
             {
-                Image = Image.FromFile("pic1.jpg"),
+                Image = Image.FromFile("pic" + rndPicture + ".jpg"),
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Dock = DockStyle.Fill,
                 Width = 150,
@@ -196,7 +198,7 @@ namespace Projektarbetet
                 Multiline = true,
                 Width = 100,
                 Height = 150,
-                Dock = DockStyle.Fill
+                Dock = DockStyle.Fill,
             };
             Table.Controls.Add(BoxDescription, 1, 7);
             Table.SetRowSpan(BoxDescription, 3);
@@ -312,7 +314,7 @@ namespace Projektarbetet
 
             foreach (Product p in listStarters)
             {
-                Starter.Items.Add(p.Name + " - " + p.Price + " kr");
+                Starters.Items.Add(p.Name + " - " + p.Price + " kr");
             };
             foreach (Product p in listWarmDishes)
             {
@@ -331,38 +333,30 @@ namespace Projektarbetet
         private void ComboboxChanged(object sender, EventArgs e)
         {
             ComboBox c = (ComboBox)sender;
-            string picture = "";
-            if (sender == Starter)
+            string index = "";
+            if (sender == Starters)
             {
-                picture = "s";
+                index = "s";
             }
             else if (sender == WarmDishes)
             {
-                picture = "w";
+                index = "w";
             }
             else if (sender == Desserts)
             {
-                picture = "d";
+                index = "d";
             }
             else
             {
-                picture = "f";
+                index = "f";
             }
 
-            int t = c.SelectedIndex +1;
-            Picture.Image = Image.FromFile(picture + t + ".jpg");
-            Picture.SizeMode = PictureBoxSizeMode.StretchImage;
-            Picture.Dock = DockStyle.Fill;
-            Picture.Width = 150;
-            Picture.Height = 150;            
-            Table.Controls.Add(Picture, 1, 1);
-            Table.SetRowSpan(Picture, 6);
+            Picture.Image = Image.FromFile(index + (c.SelectedIndex + 1) + ".jpg");
 
-
+            BoxDescription.Text = "Hej";
 
 
             //string[] filenames = Directory.GetFiles("Pictures");
-
         }        
     }
 }
