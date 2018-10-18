@@ -30,7 +30,8 @@ namespace Projektarbetet
 
         public MyForm()
         {
-            WindowState = FormWindowState.Maximized;      //anger storleken på fönstret
+            // Anger storleken på fönstret.
+            WindowState = FormWindowState.Maximized;
 
             Table = new TableLayoutPanel
             {
@@ -57,15 +58,17 @@ namespace Projektarbetet
             Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
             Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
 
+
             Label restaurantName = new Label
             {
-                Text = "Restaurang SeeSharp",
+                Text = "Restaurang SeaSharp",
                 TextAlign = ContentAlignment.MiddleCenter,
                 Dock = DockStyle.Fill,
                 Font = new Font("Lucida Console", 30),
             };
             Table.Controls.Add(restaurantName);
             Table.SetColumnSpan(restaurantName, 3);
+
 
             Label menuLabel = new Label
             {
@@ -76,6 +79,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(menuLabel, 0, 1);
 
+
             Label startersLabel = new Label
             {
                 Text = "Förrätter",
@@ -85,6 +89,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(startersLabel, 0, 2);
 
+
             Starters = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
@@ -92,6 +97,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(Starters, 0, 3);
             Starters.SelectedIndexChanged += ComboboxChanged;
+
 
             Label warmDishesLabel = new Label
             {
@@ -162,6 +168,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(discountLabel, 0, 10);
 
+
             TextBox discount = new TextBox
             {
                 Dock = DockStyle.Fill                
@@ -179,7 +186,8 @@ namespace Projektarbetet
             */
 
 
-            Random rnd = new Random();      //slumpar fram restaurang-bilden
+            // Slumpar fram restaurang-bilderna
+            Random rnd = new Random();
             int rndPicture = rnd.Next(1, 4);
             Picture = new PictureBox
             {
@@ -232,15 +240,22 @@ namespace Projektarbetet
             Table.Controls.Add(order, 2, 1);
 
 
-            TextBox orderList = new TextBox
+            DataGridView orderList = new DataGridView
             {
-                Multiline = true,
-                Width = 100,
-                Height = 150,
-                Dock = DockStyle.Fill
+                ColumnCount = 3,               
+                Dock = DockStyle.Fill,
+                AllowUserToAddRows = false,
+                //AllowUserToDeleteRows = false
+
             };
             Table.Controls.Add(orderList, 2, 2);
             Table.SetRowSpan(orderList, 8);
+            orderList.Columns[0].Name = "Antal";
+            orderList.Columns[1].Name = "Maträtt";
+            orderList.Columns[2].Name = "Pris";
+
+            // Lägga till i orderList
+            //orderList.Rows.Add(new string[] { "Sweden", "Stockholm", "Stefan" });
 
 
             Label totalPrice = new Label
@@ -260,11 +275,13 @@ namespace Projektarbetet
             };
             Table.Controls.Add(shop, 2, 11);
 
+
             List<Product> listStarters = new List<Product>();
             List<Product> listWarmDishes = new List<Product>();
             List<Product> listDesserts = new List<Product>();
             List<Product> listDrinks = new List<Product>();
 
+            // Splittar produkterna och lägger i 4 olika listor.
             string[] lines = File.ReadAllLines("products.csv");
             foreach (string line in lines)
             {
@@ -312,6 +329,7 @@ namespace Projektarbetet
                 }
             }
 
+            // Lägger till produkterna i dropdowlistorna.
             foreach (Product p in listStarters)
             {
                 Starters.Items.Add(p.Name + " - " + p.Price + " kr");
@@ -330,32 +348,46 @@ namespace Projektarbetet
             };
         }
 
+
         private void ComboboxChanged(object sender, EventArgs e)
         {
-            ComboBox c = (ComboBox)sender;
-            string index = "";
+            
+                ComboBox c = (ComboBox)sender;
+            string index1 = "";
             if (sender == Starters)
             {
-                index = "s";
+                index1 = "s";
             }
             else if (sender == WarmDishes)
             {
-                index = "w";
+                index1 = "w";
             }
             else if (sender == Desserts)
             {
-                index = "d";
+                index1 = "d";
             }
             else
             {
-                index = "f";
+                index1 = "f";
             }
 
-            Picture.Image = Image.FromFile(index + (c.SelectedIndex + 1) + ".jpg");
-
-            BoxDescription.Text = "Hej";
+            Picture.Image = Image.FromFile(index1 + (c.SelectedIndex + 1) + ".jpg");
 
 
+            string[] lines = File.ReadAllLines("products.csv");
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(',');
+                string index = parts[0];
+                string description = parts[3];
+
+                if (index == index1 + (c.SelectedIndex + 1))
+                {
+                    BoxDescription.Text = description;
+                }
+            }
+
+            
             //string[] filenames = Directory.GetFiles("Pictures");
         }        
     }
