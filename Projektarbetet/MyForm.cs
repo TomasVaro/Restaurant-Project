@@ -11,13 +11,6 @@ namespace Projektarbetet
 {
     class MyForm : Form
     {
-        public class Product
-        {
-            public string Index;
-            public int Price;
-            public string Name;
-            public string Description;
-        };
 
         public TableLayoutPanel Table;
         public ComboBox Starters;
@@ -25,8 +18,16 @@ namespace Projektarbetet
         public ComboBox Desserts;
         public ComboBox Drinks;
         public PictureBox Picture;
-        public TextBox BoxDescription;
+        public TextBox DescriptionBox;
+        public List<Product> listStarters;
 
+        public class Product
+        {
+            public string Index;
+            public int Price;
+            public string Name;
+            public string Description;
+        };
 
         public MyForm()
         {
@@ -38,7 +39,7 @@ namespace Projektarbetet
                 RowCount = 12,
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
-                CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
+                //CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
             };
             Controls.Add(Table);
 
@@ -201,15 +202,14 @@ namespace Projektarbetet
             Table.SetRowSpan(Picture, 6);
 
 
-            BoxDescription = new TextBox
+            DescriptionBox = new TextBox
             {
                 Multiline = true,
-                Width = 100,
-                Height = 150,
                 Dock = DockStyle.Fill,
+                Font = new Font("Times New Roman", 18)
             };
-            Table.Controls.Add(BoxDescription, 1, 7);
-            Table.SetRowSpan(BoxDescription, 3);
+            Table.Controls.Add(DescriptionBox, 1, 7);
+            Table.SetRowSpan(DescriptionBox, 3);
 
 
             Button add = new Button
@@ -242,17 +242,17 @@ namespace Projektarbetet
 
             DataGridView orderList = new DataGridView
             {
-                ColumnCount = 3,               
+                ColumnCount = 3,
                 Dock = DockStyle.Fill,
-                AllowUserToAddRows = false,
-                //AllowUserToDeleteRows = false
-
+                AllowUserToAddRows = false
             };
             Table.Controls.Add(orderList, 2, 2);
             Table.SetRowSpan(orderList, 8);
             orderList.Columns[0].Name = "Antal";
             orderList.Columns[1].Name = "Maträtt";
             orderList.Columns[2].Name = "Pris";
+            orderList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
 
             // Lägga till i orderList
             //orderList.Rows.Add(new string[] { "Sweden", "Stockholm", "Stefan" });
@@ -276,7 +276,7 @@ namespace Projektarbetet
             Table.Controls.Add(shop, 2, 11);
 
 
-            List<Product> listStarters = new List<Product>();
+            listStarters = new List<Product>();
             List<Product> listWarmDishes = new List<Product>();
             List<Product> listDesserts = new List<Product>();
             List<Product> listDrinks = new List<Product>();
@@ -351,8 +351,7 @@ namespace Projektarbetet
 
         private void ComboboxChanged(object sender, EventArgs e)
         {
-            
-                ComboBox c = (ComboBox)sender;
+            ComboBox c = (ComboBox)sender;
             string index1 = "";
             if (sender == Starters)
             {
@@ -374,6 +373,7 @@ namespace Projektarbetet
             Picture.Image = Image.FromFile(index1 + (c.SelectedIndex + 1) + ".jpg");
 
 
+            
             string[] lines = File.ReadAllLines("products.csv");
             foreach (string line in lines)
             {
@@ -383,10 +383,12 @@ namespace Projektarbetet
 
                 if (index == index1 + (c.SelectedIndex + 1))
                 {
-                    BoxDescription.Text = description;
+                    DescriptionBox.Text = description;
                 }
             }
 
+            
+            
             
             //string[] filenames = Directory.GetFiles("Pictures");
         }        
