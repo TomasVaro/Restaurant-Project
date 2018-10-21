@@ -20,8 +20,8 @@ namespace Projektarbetet
         public PictureBox Picture;
         public TextBox DescriptionBox;
         public List<Product> listStarters;
-        public List<Product> listAllProducts;
         public DataGridView orderList;
+        public string ComboBoxClickItem;
 
         public class Product
         {
@@ -120,7 +120,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(WarmDishes, 0, 5);
             WarmDishes.SelectedIndexChanged += ComboboxChanged;
-            
+
 
             Label dessertsLabel = new Label
             {
@@ -174,7 +174,7 @@ namespace Projektarbetet
 
             TextBox discount = new TextBox
             {
-                Dock = DockStyle.Fill                
+                Dock = DockStyle.Fill
             };
             Table.Controls.Add(discount, 0, 11);
 
@@ -208,10 +208,11 @@ namespace Projektarbetet
             {
                 Multiline = true,
                 Dock = DockStyle.Fill,
-                Font = new Font("Times New Roman", 18)
+                Font = new Font("Times New Roman", 18),
             };
             Table.Controls.Add(DescriptionBox, 1, 7);
             Table.SetRowSpan(DescriptionBox, 3);
+            DescriptionBox.ReadOnly = true;
 
 
             Button add = new Button
@@ -222,7 +223,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(add, 1, 10);
             add.Click += AddClick;
-            
+
 
             Button remove = new Button
             {
@@ -243,7 +244,7 @@ namespace Projektarbetet
             Table.Controls.Add(order, 2, 1);
 
 
-             orderList = new DataGridView
+            orderList = new DataGridView
             {
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
@@ -255,10 +256,6 @@ namespace Projektarbetet
             orderList.Columns[1].Name = "Maträtt";
             orderList.Columns[2].Name = "Pris";
             orderList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-
-            // Lägga till i orderList
-            //orderList.Rows.Add(new string[] { "Sweden", "Stockholm", "Stefan" });
 
 
             Label totalPrice = new Label
@@ -355,6 +352,9 @@ namespace Projektarbetet
         private void ComboboxChanged(object sender, EventArgs e)
         {
             ComboBox c = (ComboBox)sender;
+            ComboBoxClickItem = Convert.ToString(c.SelectedItem);   // Vald rätt sparas i instansvariabeln ComboBoxClickItem
+
+            // Lägger till rätt bild i PictureBox.
             string index1 = "";
             if (sender == Starters)
             {
@@ -372,11 +372,10 @@ namespace Projektarbetet
             {
                 index1 = "f";
             }
-
             Picture.Image = Image.FromFile(index1 + (c.SelectedIndex + 1) + ".jpg");
 
 
-            
+            // Lägger till rätt beskrivning i DescriptionBox.
             string[] lines = File.ReadAllLines("products.csv");
             foreach (string line in lines)
             {
@@ -389,45 +388,17 @@ namespace Projektarbetet
                     DescriptionBox.Text = description;
                 }
             }
+        }
 
-            
-            
-            
-            
-        }        
+
         private void AddClick(object sender, EventArgs e)
         {
             Button c = (Button)sender;
+            int quantity = 0;
+            quantity++;
+            string[] namePrisArray = ComboBoxClickItem.Split(new char[] { '-' });
 
-            listAllProducts = new List<Product>();
-            string[] lines = File.ReadAllLines("products.csv");
-            foreach (string line in lines)
-            {
-                string[] parts = line.Split(',');
-                string index = parts[0];
-                int price = int.Parse(parts[1]);
-                string name = parts[2];
-                string description = parts[3];
-
-
-                listAllProducts.Add(new Product
-                {
-                    Price = price,
-                    Name = name,
-                    Description = description
-                });
-            }
-            foreach (Product p in listAllProducts)
-            {
-                if (DescriptionBox.Text == p.Description)
-                {
-
-                    orderList.Rows.Add(new string[] { p.Description, p.Name, (p.Price).ToString() });
-                }
-            }
-
-
-
+            orderList.Rows.Add(new string[] { quantity.ToString(), namePrisArray[0], namePrisArray[1] });
         }
     }
 }
