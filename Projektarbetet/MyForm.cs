@@ -120,7 +120,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(WarmDishes, 0, 5);
             WarmDishes.SelectedIndexChanged += ComboboxChanged;
-            
+
 
             Label dessertsLabel = new Label
             {
@@ -174,7 +174,7 @@ namespace Projektarbetet
 
             TextBox discount = new TextBox
             {
-                Dock = DockStyle.Fill                
+                Dock = DockStyle.Fill
             };
             Table.Controls.Add(discount, 0, 11);
 
@@ -245,7 +245,6 @@ namespace Projektarbetet
 
 
             orderList = new DataGridView
-
             {
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
@@ -258,7 +257,7 @@ namespace Projektarbetet
             orderList.Columns[2].Name = "Pris";
             orderList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-                        
+
             Label totalPrice = new Label
             {
                 Text = "Pris totalt:",
@@ -332,7 +331,7 @@ namespace Projektarbetet
 
             // Lägger till produkterna i dropdowlistorna.
             foreach (Product p in listStarters)
-            {              
+            {
                 Starters.Items.Add(p.Name + " - " + p.Price + " kr");
             };
             foreach (Product p in listWarmDishes)
@@ -375,7 +374,7 @@ namespace Projektarbetet
             }
             Picture.Image = Image.FromFile(index1 + (c.SelectedIndex + 1) + ".jpg");
 
-            
+
             // Lägger till rätt beskrivning i DescriptionBox.
             string[] lines = File.ReadAllLines("products.csv");
             foreach (string line in lines)
@@ -394,12 +393,13 @@ namespace Projektarbetet
 
         private void AddClick(object sender, EventArgs e)
         {
-            //Button c = (Button)sender;                        
+
+            Button c = (Button)sender;
             int quantity = 0;
-            quantity++;            
+            quantity++;
             string[] namePrisArray = ComboBoxClickItem.Split(new char[] { '-' });
 
-            orderList.Rows.Add(new string[] { quantity.ToString(), namePrisArray[0], namePrisArray[1]});
+            orderList.Rows.Add(new string[] { quantity.ToString(), namePrisArray[0], namePrisArray[1] });
         }
     }
 }
