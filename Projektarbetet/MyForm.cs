@@ -394,7 +394,7 @@ namespace Projektarbetet
 
         private void AddClick(object sender, EventArgs e)
         {
-            Button c = (Button)sender;                        
+            //Button c = (Button)sender;                        
             int quantity = 0;
             quantity++;            
             string[] namePrisArray = ComboBoxClickItem.Split(new char[] { '-' });
