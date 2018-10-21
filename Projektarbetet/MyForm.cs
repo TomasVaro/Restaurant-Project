@@ -20,6 +20,8 @@ namespace Projektarbetet
         public PictureBox Picture;
         public TextBox DescriptionBox;
         public List<Product> listStarters;
+        public List<Product> listAllProducts;
+        public DataGridView orderList;
 
         public class Product
         {
@@ -219,7 +221,8 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14)
             };
             Table.Controls.Add(add, 1, 10);
-
+            add.Click += AddClick;
+            
 
             Button remove = new Button
             {
@@ -240,7 +243,7 @@ namespace Projektarbetet
             Table.Controls.Add(order, 2, 1);
 
 
-            DataGridView orderList = new DataGridView
+             orderList = new DataGridView
             {
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
@@ -390,7 +393,41 @@ namespace Projektarbetet
             
             
             
-            //string[] filenames = Directory.GetFiles("Pictures");
+            
         }        
+        private void AddClick(object sender, EventArgs e)
+        {
+            Button c = (Button)sender;
+
+            listAllProducts = new List<Product>();
+            string[] lines = File.ReadAllLines("products.csv");
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(',');
+                string index = parts[0];
+                int price = int.Parse(parts[1]);
+                string name = parts[2];
+                string description = parts[3];
+
+
+                listAllProducts.Add(new Product
+                {
+                    Price = price,
+                    Name = name,
+                    Description = description
+                });
+            }
+            foreach (Product p in listAllProducts)
+            {
+                if (DescriptionBox.Text == p.Description)
+                {
+
+                    orderList.Rows.Add(new string[] { p.Description, p.Name, (p.Price).ToString() });
+                }
+            }
+
+
+
+        }
     }
 }
