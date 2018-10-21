@@ -20,6 +20,8 @@ namespace Projektarbetet
         public PictureBox Picture;
         public TextBox DescriptionBox;
         public List<Product> listStarters;
+        public DataGridView orderList;
+        public string ComboBoxClickItem;
 
         public class Product
         {
@@ -206,10 +208,11 @@ namespace Projektarbetet
             {
                 Multiline = true,
                 Dock = DockStyle.Fill,
-                Font = new Font("Times New Roman", 18)
+                Font = new Font("Times New Roman", 18),
             };
             Table.Controls.Add(DescriptionBox, 1, 7);
             Table.SetRowSpan(DescriptionBox, 3);
+            DescriptionBox.ReadOnly = true;
 
 
             Button add = new Button
@@ -219,6 +222,7 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14)
             };
             Table.Controls.Add(add, 1, 10);
+            add.Click += AddClick;
 
 
             Button remove = new Button
@@ -240,7 +244,7 @@ namespace Projektarbetet
             Table.Controls.Add(order, 2, 1);
 
 
-            DataGridView orderList = new DataGridView
+            orderList = new DataGridView
             {
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
@@ -253,11 +257,7 @@ namespace Projektarbetet
             orderList.Columns[2].Name = "Pris";
             orderList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-
-            // Lägga till i orderList
-            //orderList.Rows.Add(new string[] { "Sweden", "Stockholm", "Stefan" });
-
-
+                        
             Label totalPrice = new Label
             {
                 Text = "Pris totalt:",
@@ -331,7 +331,7 @@ namespace Projektarbetet
 
             // Lägger till produkterna i dropdowlistorna.
             foreach (Product p in listStarters)
-            {
+            {              
                 Starters.Items.Add(p.Name + " - " + p.Price + " kr");
             };
             foreach (Product p in listWarmDishes)
@@ -352,6 +352,9 @@ namespace Projektarbetet
         private void ComboboxChanged(object sender, EventArgs e)
         {
             ComboBox c = (ComboBox)sender;
+            ComboBoxClickItem = Convert.ToString(c.SelectedItem);   // Vald rätt sparas i instansvariabeln ComboBoxClickItem
+
+            // Lägger till rätt bild i PictureBox.
             string index1 = "";
             if (sender == Starters)
             {
@@ -369,11 +372,10 @@ namespace Projektarbetet
             {
                 index1 = "f";
             }
-
             Picture.Image = Image.FromFile(index1 + (c.SelectedIndex + 1) + ".jpg");
 
-
             
+            // Lägger till rätt beskrivning i DescriptionBox.
             string[] lines = File.ReadAllLines("products.csv");
             foreach (string line in lines)
             {
@@ -386,11 +388,17 @@ namespace Projektarbetet
                     DescriptionBox.Text = description;
                 }
             }
+        }
 
-            
-            
-            
-            //string[] filenames = Directory.GetFiles("Pictures");
-        }        
+
+        private void AddClick(object sender, EventArgs e)
+        {
+            Button c = (Button)sender;                        
+            int quantity = 0;
+            quantity++;            
+            string[] namePrisArray = ComboBoxClickItem.Split(new char[] { '-' });
+
+            orderList.Rows.Add(new string[] { quantity.ToString(), namePrisArray[0], namePrisArray[1]});
+        }
     }
 }
