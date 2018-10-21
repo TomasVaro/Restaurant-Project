@@ -245,6 +245,7 @@ namespace Projektarbetet
 
 
             orderList = new DataGridView
+
             {
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
