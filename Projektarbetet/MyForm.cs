@@ -22,7 +22,8 @@ namespace Projektarbetet
         public List<Product> listStarters;
         public DataGridView orderList;
         public string ComboBoxClickItem;
-
+        public Dictionary<string, int> TotalOrderDictionary;
+        
         public class Product
         {
             public string Index;
@@ -33,8 +34,11 @@ namespace Projektarbetet
 
         public MyForm()
         {
+            //TotalOrderDictionary = new Dictionary<string, int>();
             // Anger storleken på fönstret.
             WindowState = FormWindowState.Maximized;
+            TotalOrderDictionary = new Dictionary<string, int>();
+            
 
             Table = new TableLayoutPanel
             {
@@ -345,7 +349,10 @@ namespace Projektarbetet
             foreach (Product p in listDrinks)
             {
                 Drinks.Items.Add(p.Name + " - " + p.Price + " kr");
-            };
+            }
+
+            
+
         }
 
 
@@ -393,13 +400,44 @@ namespace Projektarbetet
 
         private void AddClick(object sender, EventArgs e)
         {
+            Button d = (Button)sender;
+            //ComboBoxClickItem = Convert.ToString(d.SelectedItem);
 
-            Button c = (Button)sender;
-            int quantity = 0;
-            quantity++;
-            string[] namePrisArray = ComboBoxClickItem.Split(new char[] { '-' });
+            //string[] namePriceArray = ComboBox c = (ComboBox)sender;.Split(new char[] { '-' });
+            //orderList.Rows.Add(new string[] { 1.ToString(), namePriceArray[0], namePriceArray[1] });
 
-            orderList.Rows.Add(new string[] { quantity.ToString(), namePrisArray[0], namePrisArray[1] });
+            int g = 1;
+            foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
+            {
+
+                if (pair.Key == ComboBoxClickItem)
+                {
+                    TotalOrderDictionary[pair.Key] = g++;
+                }
+            }                
+            TotalOrderDictionary[ComboBoxClickItem] = g;
+                
+            // Lägger till antal, namn och pris till DataGridView
+            
+
+            // Lägger till beställningen i listan TotalOrderList
+            /*
+            foreach (KeyValuePair<string, int> pair in KeyValuePair)
+
+            TotalOrderList.Add(1.ToString());
+            TotalOrderList.Add(namePriceArray[0]);
+            TotalOrderList.Add(namePriceArray[1]);
+
+            for (int i = 3; i < TotalOrderList.Count; i++)
+            {
+                if (namePriceArray[0] == TotalOrderList[i])
+                {                    
+                    TotalOrderList[i-4] = 2.ToString();
+                    TotalOrderList.RemoveAt(TotalOrderList.Count - 1);
+                    TotalOrderList.RemoveAt(TotalOrderList.Count - 1);
+                    TotalOrderList.RemoveAt(TotalOrderList.Count - 1);
+                }
+            }*/
         }
     }
 }
