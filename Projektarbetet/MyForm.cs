@@ -34,10 +34,11 @@ namespace Projektarbetet
 
         public MyForm()
         {
-            //TotalOrderDictionary = new Dictionary<string, int>();
+            TotalOrderDictionary = new Dictionary<string, int>();
+
+
             // Anger storleken på fönstret.
             WindowState = FormWindowState.Maximized;
-            TotalOrderDictionary = new Dictionary<string, int>();
             
 
             Table = new TableLayoutPanel
@@ -350,16 +351,13 @@ namespace Projektarbetet
             {
                 Drinks.Items.Add(p.Name + " - " + p.Price + " kr");
             }
-
-            
-
         }
 
-
+        // Lägger till bild och beskrivning när man väljer från dropdown-listorna.
         private void ComboboxChanged(object sender, EventArgs e)
         {
             ComboBox c = (ComboBox)sender;
-            ComboBoxClickItem = Convert.ToString(c.SelectedItem);   // Vald rätt sparas i instansvariabeln ComboBoxClickItem
+            ComboBoxClickItem = Convert.ToString(c.SelectedItem);   // Vald rätt sparas i ComboBoxClickItem
 
             // Lägger till rätt bild i PictureBox.
             string index1 = "";
@@ -401,24 +399,33 @@ namespace Projektarbetet
         private void AddClick(object sender, EventArgs e)
         {
             Button d = (Button)sender;
-            //ComboBoxClickItem = Convert.ToString(d.SelectedItem);
 
             //string[] namePriceArray = ComboBox c = (ComboBox)sender;.Split(new char[] { '-' });
             //orderList.Rows.Add(new string[] { 1.ToString(), namePriceArray[0], namePriceArray[1] });
 
-            int g = 1;
+            //int numberOrdered = 1;
+
+
+            if (TotalOrderDictionary.ContainsKey(ComboBoxClickItem))
+            {
+                TotalOrderDictionary[ComboBoxClickItem] += 1;
+            }
+            else
+            {
+                TotalOrderDictionary[ComboBoxClickItem] = 1;
+            }
+
+
+            orderList.Rows.Clear();
+            
             foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
             {
+                orderList.Rows.Add(pair.Key, pair.Value);
+            }
 
-                if (pair.Key == ComboBoxClickItem)
-                {
-                    TotalOrderDictionary[pair.Key] = g++;
-                }
-            }                
-            TotalOrderDictionary[ComboBoxClickItem] = g;
-                
+
             // Lägger till antal, namn och pris till DataGridView
-            
+
 
             // Lägger till beställningen i listan TotalOrderList
             /*
