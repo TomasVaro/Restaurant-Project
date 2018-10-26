@@ -49,7 +49,6 @@ namespace Projektarbetet
             WindowState = FormWindowState.Maximized;
             
 
-
             Table = new TableLayoutPanel
             {
                 RowCount = 12,
@@ -82,7 +81,7 @@ namespace Projektarbetet
                 Text = "Restaurang SeaSharp",
                 TextAlign = ContentAlignment.MiddleCenter,
                 Dock = DockStyle.Fill,
-                Font = new Font("Lucida Console", 30),
+                Font = new Font("Blackoak Std", 22),
             };
             Table.Controls.Add(restaurantName);
             Table.SetColumnSpan(restaurantName, 3);
@@ -193,7 +192,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(discount, 0, 11);
 
-
+            
             // Slumpar fram restaurang-bilderna
             Random rnd = new Random();
             int rndPicture = rnd.Next(1, 4);
@@ -216,7 +215,7 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 18)               
             };
             Table.Controls.Add(DescriptionBox, 1, 7);
-            Table.SetRowSpan(DescriptionBox, 3);
+            Table.SetRowSpan(DescriptionBox, 2);
             DescriptionBox.ReadOnly = true;
 
 
@@ -226,7 +225,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 Font = new Font("Times New Roman", 14)
             };
-            Table.Controls.Add(add, 1, 10);
+            Table.Controls.Add(add, 1, 9);
             add.Click += AddClick;
 
 
@@ -236,8 +235,19 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill
             };
-            Table.Controls.Add(remove, 1, 11);
+            Table.Controls.Add(remove, 1, 10);
             remove.Click += RemoveClick;
+
+
+            Button clearChart = new Button
+            {
+                Text = "Rensa beställningen",
+                Font = new Font("Times New Roman", 14),
+                Dock = DockStyle.Fill
+            };
+            Table.Controls.Add(clearChart, 1, 11);
+            clearChart.Click += ClearChartClick;
+
 
 
             Label order = new Label
@@ -253,14 +263,12 @@ namespace Projektarbetet
             orderList = new DataGridView
             {
                 ColumnCount = 3,
-
                 Dock = DockStyle.Fill,
                 AllowUserToAddRows = false,
                 ReadOnly = true
             };
-            //orderList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             Table.Controls.Add(orderList, 2, 2);
-            Table.SetRowSpan(orderList, 8);
+            Table.SetRowSpan(orderList, 7);
             orderList.Columns[0].Name = "Antal";
             orderList.Columns[1].Name = "Maträtt";
             orderList.Columns[2].Name = "Pris/st";
@@ -275,7 +283,7 @@ namespace Projektarbetet
                 TextAlign = ContentAlignment.MiddleLeft,
                 Dock = DockStyle.Fill
             };
-            Table.Controls.Add(totalPriceLabel, 2, 10);
+            Table.Controls.Add(totalPriceLabel, 2, 9);
 
 
             Button shop = new Button
@@ -284,7 +292,18 @@ namespace Projektarbetet
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill
             };
-            Table.Controls.Add(shop, 2, 11);
+            Table.Controls.Add(shop, 2, 10);
+
+
+            Button saveOrder = new Button
+            {
+                Text = "Spara beställningen",
+                Font = new Font("Times New Roman", 14),
+                Dock = DockStyle.Fill
+            };
+            Table.Controls.Add(saveOrder, 2, 11);
+            saveOrder.Click += SaveOrderClick;
+
 
 
             listStarters = new List<Product>();
@@ -360,6 +379,8 @@ namespace Projektarbetet
         }
 
 
+
+
         // Lägger till bild i PictureBox och beskrivning i DescriptionBox när man väljer från dropdown-listorna.
         private void ComboboxChanged(object sender, EventArgs e)
         {
@@ -404,12 +425,10 @@ namespace Projektarbetet
 
 
 
-
         // Lägger till beställningen till DataGridView.
         private void AddClick(object sender, EventArgs e)
         {
             if (ComboBoxClickItem != null)  // Kollar om man valt någon rätt eller inte.
-
             {                
                 // Lägger till beställningen i dictionary TotalOrderDictionary.
                 if (TotalOrderDictionary.ContainsKey(ComboBoxClickItem))
@@ -428,7 +447,6 @@ namespace Projektarbetet
                 totalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
 
 
-
                 orderList.Rows.Clear();            
                 // Lägger till antal, namn och pris till DataGridView samt priset till TotalPrice
                 foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
@@ -436,13 +454,13 @@ namespace Projektarbetet
                     string order = pair.Key;
                     orderArray = order.Split(new char[] { '-' });
                     orderList.Rows.Add(pair.Value, orderArray[0], orderArray[1]);
+                    orderList.Name = orderArray[0];                    
                 }
+                orderList.CurrentCell.Selected = false; // Tar bort automatiska cellmarkeringen i DatGridView
             }
         }
 
 
-
-       
 
         // Hämtar namnet och priset på maträtten från DataGridView.
         private void OrderListClick(object sender, EventArgs e)
@@ -479,7 +497,6 @@ namespace Projektarbetet
                     }
                 }
 
-
                 // Om antalet av en beställning blir 0 så tas den bort.
                 foreach (var item in TotalOrderDictionary.Where(KeyValuePair => KeyValuePair.Value == 0).ToList())
                 {
@@ -513,7 +530,32 @@ namespace Projektarbetet
                 }               
             }
 
-            // MessageBox.Show(orderNamePrice);
+        }
+
+
+
+        // Rensar hela beställningen.
+        private void ClearChartClick(object sender, EventArgs e)
+        {
+            orderList.Rows.Clear();
+            TotalOrderDictionary.Clear();
+            TotalPrice = 0;
+            totalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
+        }
+
+
+
+        // Sparar beställningen i en fil.
+        private void SaveOrderClick(object sender, EventArgs e)
+        {
+            string csv = string.Join(Environment.NewLine, TotalOrderDictionary.Select(d => d.Key + "," + d.Value));
+            System.IO.File.WriteAllText(@"C:\Temp\Cart.csv", csv);
+            MessageBox.Show("Din varukorg är sparad!");
+            orderList.Rows.Clear();
+            TotalOrderDictionary.Clear();
+            TotalPrice = 0;
+            totalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
         }
     }
+            // MessageBox.Show(orderNamePrice);
 }
