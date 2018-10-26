@@ -11,7 +11,6 @@ namespace Projektarbetet
 {
     class MyForm : Form
     {
-
         public TableLayoutPanel Table;
         public ComboBox Starters;
         public ComboBox WarmDishes;
@@ -30,11 +29,13 @@ namespace Projektarbetet
         public string[] orderArray;
         public int DataGridViewRowIndex;
         public int DataGridViewColumnIndex;
+        public string order;
+        public TextBox CustomerDiscountCode;
 
 
         public class Product
         {
-            public string Index;
+            //public string Index;
             public int Price;
             public string Name;
             public string Description;
@@ -186,11 +187,11 @@ namespace Projektarbetet
             Table.Controls.Add(discountLabel, 0, 10);
 
 
-            TextBox discount = new TextBox
+            CustomerDiscountCode = new TextBox
             {
                 Dock = DockStyle.Fill
             };
-            Table.Controls.Add(discount, 0, 11);
+            Table.Controls.Add(CustomerDiscountCode, 0, 11);
 
             
             // Slumpar fram restaurang-bilderna
@@ -247,8 +248,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(clearChart, 1, 11);
             clearChart.Click += ClearChartClick;
-
-
+        
 
             Label order = new Label
             {
@@ -293,6 +293,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill
             };
             Table.Controls.Add(shop, 2, 10);
+            shop.Click += ShopClick;
 
 
             Button saveOrder = new Button
@@ -305,11 +306,11 @@ namespace Projektarbetet
             saveOrder.Click += SaveOrderClick;
 
 
-
             listStarters = new List<Product>();
             List<Product> listWarmDishes = new List<Product>();
             List<Product> listDesserts = new List<Product>();
             List<Product> listDrinks = new List<Product>();
+
 
             // Splittar produkterna och lägger i 4 olika listor.
             string[] lines = File.ReadAllLines("products.csv");
@@ -359,6 +360,7 @@ namespace Projektarbetet
                 }
             }
 
+
             // Lägger till produkterna i dropdowlistorna.
             foreach (Product p in listStarters)
             {
@@ -377,7 +379,6 @@ namespace Projektarbetet
                 Drinks.Items.Add(p.Name + " - " + p.Price + " kr");
             }
         }
-
 
 
 
@@ -507,7 +508,7 @@ namespace Projektarbetet
                 orderList.Rows.Clear();
                 foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
                 {
-                    string order = pair.Key;
+                    order = pair.Key;
                     orderArray = order.Split(new char[] { '-' });
                     orderList.Rows.Add(pair.Value, orderArray[0], orderArray[1]);
                 }
@@ -556,6 +557,42 @@ namespace Projektarbetet
             TotalPrice = 0;
             totalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
         }
+
+
+
+        private void ShopClick(object sender, EventArgs e)
+        {
+            string receipt = "";
+            foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
+            {
+                order = pair.Key;
+                receipt += pair.Value + " st. " + " " + order + "\n";
+            }
+            
+            string paymentInfo = TotalPrice + " SEK";
+            string[] discountCodes = File.ReadAllLines("rabattkoder.csv");
+
+            // Kontrollerar om rabattkoden stämmer och räknar i så fall ut rabatten
+            foreach (string line in discountCodes)
+            {
+                string[] voucherCodePercentage = line.Split(',');
+                int percentage = int.Parse(voucherCodePercentage[1]);
+                if (CustomerDiscountCode.Text == voucherCodePercentage[0])
+                {
+                    paymentInfo = (TotalPrice - (TotalPrice * percentage) / 100) + " SEK" + "\n" +
+                               "(Din rabatt " + ((TotalPrice * percentage) / 100) + " SEK)" ;                
+                }
+            }
+            
+            MessageBox.Show(
+                "*** RESTAURANG SEA SHARP ***" + "\n" + 
+                "----------------------------" + "\n" + 
+                DateTime.Now + "\n" + 
+                "----------------------------" + "\n" +
+                receipt + "\n" + 
+                "**************************" + "\n" +
+                "ATT BETALA: " + paymentInfo
+                );
+        }
     }
-            // MessageBox.Show(orderNamePrice);
 }
