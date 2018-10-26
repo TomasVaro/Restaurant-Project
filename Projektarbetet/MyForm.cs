@@ -22,6 +22,10 @@ namespace Projektarbetet
         public List<Product> listStarters;
         public DataGridView orderList;
         public string ComboBoxClickItem;
+        public Dictionary<string, int> TotalOrderDictionary;
+        public int TotalPrice;
+        public Label totalPriceLabel;
+
 
         public class Product
         {
@@ -33,8 +37,12 @@ namespace Projektarbetet
 
         public MyForm()
         {
+            TotalOrderDictionary = new Dictionary<string, int>();
+            TotalPrice = 0;
+
             // Anger storleken på fönstret.
             WindowState = FormWindowState.Maximized;
+
 
             Table = new TableLayoutPanel
             {
@@ -178,16 +186,6 @@ namespace Projektarbetet
             };
             Table.Controls.Add(discount, 0, 11);
 
-            /*
-            Label childMenue = new Label
-            {
-                Text = "Barnmeny på varmrätter för halva priset!",
-                Font = new Font("Times New Roman", 16),
-                Dock = DockStyle.Fill
-            };
-            Table.Controls.Add(childMenue, 0, 7);
-            */
-
 
             // Slumpar fram restaurang-bilderna
             Random rnd = new Random();
@@ -208,7 +206,7 @@ namespace Projektarbetet
             {
                 Multiline = true,
                 Dock = DockStyle.Fill,
-                Font = new Font("Times New Roman", 18),
+                Font = new Font("Times New Roman", 18)
             };
             Table.Controls.Add(DescriptionBox, 1, 7);
             Table.SetRowSpan(DescriptionBox, 3);
@@ -232,6 +230,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill
             };
             Table.Controls.Add(remove, 1, 11);
+            remove.Click += RemoveClick;
 
 
             Label order = new Label
@@ -247,24 +246,27 @@ namespace Projektarbetet
             orderList = new DataGridView
             {
                 ColumnCount = 3,
+
                 Dock = DockStyle.Fill,
                 AllowUserToAddRows = false
             };
+            //orderList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             Table.Controls.Add(orderList, 2, 2);
             Table.SetRowSpan(orderList, 8);
             orderList.Columns[0].Name = "Antal";
             orderList.Columns[1].Name = "Maträtt";
-            orderList.Columns[2].Name = "Pris";
+            orderList.Columns[2].Name = "Pris/st";
             orderList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
 
-            Label totalPrice = new Label
+            totalPriceLabel = new Label
             {
                 Text = "Pris totalt:",
                 Font = new Font("Times New Roman", 14),
+                TextAlign = ContentAlignment.MiddleLeft,
                 Dock = DockStyle.Fill
             };
-            Table.Controls.Add(totalPrice, 2, 10);
+            Table.Controls.Add(totalPriceLabel, 2, 10);
 
 
             Button shop = new Button
@@ -345,14 +347,14 @@ namespace Projektarbetet
             foreach (Product p in listDrinks)
             {
                 Drinks.Items.Add(p.Name + " - " + p.Price + " kr");
-            };
+            }
         }
 
-
+        // Lägger till bild och beskrivning när man väljer från dropdown-listorna.
         private void ComboboxChanged(object sender, EventArgs e)
         {
             ComboBox c = (ComboBox)sender;
-            ComboBoxClickItem = Convert.ToString(c.SelectedItem);   // Vald rätt sparas i instansvariabeln ComboBoxClickItem
+            ComboBoxClickItem = Convert.ToString(c.SelectedItem);   // Vald rätt sparas i ComboBoxClickItem
 
             // Lägger till rätt bild i PictureBox.
             string index1 = "";
@@ -391,15 +393,86 @@ namespace Projektarbetet
         }
 
 
+
+
+        // Lägger till beställningen till DataGridView.
         private void AddClick(object sender, EventArgs e)
         {
+            if (ComboBoxClickItem != null)  // Kollar om man valt någon rätt eller inte.
+            {
+                // Lägger till beställningen i dictionary TotalOrderDictionary.
+                if (TotalOrderDictionary.ContainsKey(ComboBoxClickItem))
+                {
+                    TotalOrderDictionary[ComboBoxClickItem] += 1;
+                }
+                else
+                {
+                    TotalOrderDictionary[ComboBoxClickItem] = 1;
+                }
 
-            Button c = (Button)sender;
-            int quantity = 0;
-            quantity++;
-            string[] namePrisArray = ComboBoxClickItem.Split(new char[] { '-' });
+                // Lägger till priset i "Pris totalt"-rutan.
+                string[] orderArray = ComboBoxClickItem.Split(new char[] { '-' });
+                int price = int.Parse(orderArray[1].Replace(" kr", string.Empty));
+                TotalPrice += price;
+                totalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
 
-            orderList.Rows.Add(new string[] { quantity.ToString(), namePrisArray[0], namePrisArray[1] });
+
+                orderList.Rows.Clear();
+                // Lägger till antal, namn och pris till DataGridView samt priset till TotalPrice
+                foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
+                {
+                    string order = pair.Key;
+                    orderArray = order.Split(new char[] { '-' });
+                    orderList.Rows.Add(pair.Value, orderArray[0], orderArray[1]);
+                }
+            }
+        }
+
+
+
+        // Tar bort beställningen från DataGridView.
+        private void RemoveClick(object sender, EventArgs e)
+        {
+            if (TotalOrderDictionary.Count > 0) // Kollar om det finns något i TotalOrderDictionary.
+            {
+                string productInGrid = Convert.ToString(orderList.Rows[0].Cells["Maträtt"].Value);
+                string priceInGrid = Convert.ToString(orderList.Rows[0].Cells["Pris/st"].Value);
+                string productPriceInGrid = productInGrid + "-" + priceInGrid;
+                TotalOrderDictionary[productPriceInGrid] -= 1;
+
+
+                foreach (var item in TotalOrderDictionary.Where(KeyValuePair => KeyValuePair.Value == 0).ToList())
+                {
+                    TotalOrderDictionary.Remove(item.Key);
+                }
+
+                // Subtraherar priset från "Pris totalt"-rutan.
+                string[] orderArray = ComboBoxClickItem.Split(new char[] { '-' });
+                int price = int.Parse(orderArray[1].Replace(" kr", string.Empty));
+                TotalPrice -= price;
+                totalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
+
+                orderList.Rows.Clear();
+                // Lägger till antal, namn och pris till DataGridView.
+                foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
+                {
+                    string order = pair.Key;
+                    orderArray = order.Split(new char[] { '-' });
+                    orderList.Rows.Add(pair.Value, orderArray[0], orderArray[1]);
+                }
+            }
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // MyForm
+            // 
+            this.ClientSize = new System.Drawing.Size(660, 454);
+            this.Name = "MyForm";
+            this.ResumeLayout(false);
+
         }
     }
 }
