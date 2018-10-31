@@ -31,7 +31,7 @@ namespace Projektarbetet
         public Dictionary<string, int> TotalOrderDictionary;
         public int TotalPrice;
         public Label TotalPriceLabel;
-        public string OrderNamePrice;
+        public string OrderNameAndPrice;
         public string OrderPrice;
         public string[] OrderArray;
         public int DataGridViewRowIndex;
@@ -42,10 +42,6 @@ namespace Projektarbetet
 
         public MyForm()
         {
-            // Anger storleken på fönstret.
-            WindowState = FormWindowState.Maximized;
-
-
             TableLayoutPanel Table = new TableLayoutPanel
             {
                 RowCount = 12,
@@ -54,6 +50,7 @@ namespace Projektarbetet
                 //CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
             };
             Controls.Add(Table);
+            WindowState = FormWindowState.Maximized;
 
 
             Table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
@@ -67,10 +64,10 @@ namespace Projektarbetet
             Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
             Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
             Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
-            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
             Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
             Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
-            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 9));
+            Table.RowStyles.Add(new RowStyle(SizeType.Percent, 8));
 
 
             Label restaurantName = new Label
@@ -383,7 +380,6 @@ namespace Projektarbetet
                             Description = description
                         });
                     }
-
                 }
                 catch
                 {
@@ -463,13 +459,9 @@ namespace Projektarbetet
                             }
                         }
                     }
-                }
-                else if (dialogResult == DialogResult.No)
-                {
                     File.Create(@"C:\Temp\Cart.csv").Dispose();
                 }
             }
-
 
 
             // Lägger till priset i "Pris totalt"-rutan.            
@@ -483,7 +475,6 @@ namespace Projektarbetet
                 OrderArray = orderNy.Split(new char[] { '-' });
                 OrderList.Rows.Add(pair.Value, OrderArray[0], OrderArray[1]);
             }
-            //OrderList.CurrentCell.Selected = false; // Tar bort automatiska cellmarkeringen i DatGridView.
         }
 
 
@@ -660,7 +651,7 @@ namespace Projektarbetet
                     OrderArray = order.Split(new char[] { '-' });
                     OrderList.Rows.Add(pair.Value, OrderArray[0], OrderArray[1]);
                 }                
-                OrderList.CurrentCell.Selected = false; // Tar bort automatiska cellmarkeringen i DatGridView
+                OrderList.CurrentCell.Selected = false; // Tar bort automatiska cellmarkeringen i DatGridView. Ta ej bort!!
             }
         }
 
@@ -673,7 +664,7 @@ namespace Projektarbetet
             DataGridViewColumnIndex = OrderList.CurrentCell.ColumnIndex;    // Ger index på columnen som markerats
             string orderName = OrderList.CurrentRow.Cells[1].Value.ToString();
             OrderPrice = OrderList.CurrentRow.Cells[2].Value.ToString();
-            OrderNamePrice = orderName + "-" + OrderPrice;
+            OrderNameAndPrice = orderName + "-" + OrderPrice;
         }
 
 
@@ -683,16 +674,16 @@ namespace Projektarbetet
         {
             if (TotalOrderDictionary.Count > 0) // Kollar om det finns något i TotalOrderDictionary.
             {
-                if (OrderNamePrice != null) // Kollar att OrderNamePrice inte är null.
+                if (OrderNameAndPrice != null) // Kollar att OrderNamePrice inte är null.
                 {
                     string productInGrid = Convert.ToString(OrderList.Rows[0].Cells["Maträtt"].Value);
                     string priceInGrid = Convert.ToString(OrderList.Rows[0].Cells["Pris/st"].Value);
                     string productPriceInGrid = productInGrid + "-" + priceInGrid;
 
-                    if (TotalOrderDictionary.ContainsKey(OrderNamePrice))
+                    if (TotalOrderDictionary.ContainsKey(OrderNameAndPrice))
                     {
-                        TotalOrderDictionary[OrderNamePrice] -= 1;
-
+                        TotalOrderDictionary[OrderNameAndPrice] -= 1;
+                        
                         // Subtraherar priset från "Pris totalt"-rutan.
                         int price = int.Parse(OrderPrice.Replace(" kr", string.Empty));
                         TotalPrice -= price;
@@ -702,18 +693,28 @@ namespace Projektarbetet
                 else
                 {
                     MessageBox.Show("Markera den vara du vill ta bort!");
+                    OrderList.CurrentCell.Selected = false; // Tar bort automatiska cellmarkeringen i DatGridView
                 }
+
 
                 // Om antalet av en beställning blir 0 så tas den bort.
                 foreach (var item in TotalOrderDictionary.Where(KeyValuePair => KeyValuePair.Value == 0).ToList())
                 {
                     TotalOrderDictionary.Remove(item.Key);
-                    OrderNamePrice = null;
+                    OrderNameAndPrice = null;
                 }
 
-                //Här skall koden in som avmarkerar cellen
-                //OrderList.Rows[DataGridViewRowIndex].Cells[DataGridViewColumnIndex].Selected = false;  //funkar ej
-                //OrderList.CurrentCell.Selected = false; //funkar ej
+
+
+                    //Här skall koden in som avmarkerar cellen
+                    //OrderList.Rows[DataGridViewRowIndex].Cells[DataGridViewColumnIndex].Selected = false;  //funkar ej
+                    //OrderList.CurrentCell.Selected = false; //funkar ej
+                    //OrderList.ClearSelection(); //funkar ej
+                    //OrderList.CurrentCell = null; //funkar ej
+                    //OrderList.Rows[0].Selected = false; //funkar ej
+
+
+
 
 
                 // Lägger till antal, namn och pris till DataGridView.
@@ -724,9 +725,6 @@ namespace Projektarbetet
                     OrderArray = OrderString.Split(new char[] { '-' });
                     OrderList.Rows.Add(pair.Value, OrderArray[0], OrderArray[1]);
                 }
-           
-
-
 
 
                 // Om TotalOrderDictionary inte är tom tas den automatiska cellmarkeringen bort i DataGrid View
@@ -734,6 +732,7 @@ namespace Projektarbetet
                 {
                     OrderList.CurrentCell.Selected = false; // Tar bort cellmarkeringen i DatGridView.
                 }
+
 
                 // Sparar markeringen i cellen om inte raden i DataGridView tagits bort
                 if (DataGridViewRowIndex < TotalOrderDictionary.Count)
@@ -753,7 +752,7 @@ namespace Projektarbetet
             TotalOrderDictionary.Clear();
             TotalPrice = 0;
             TotalPriceLabel.Text = "Pris totalt:  ";
-            OrderNamePrice = null;
+            OrderNameAndPrice = null;
         }
 
 
@@ -813,8 +812,7 @@ namespace Projektarbetet
             Desserts.SelectedIndex = -1;
             Drinks.SelectedIndex = -1;
             ComboBoxClickItem = null;
-            OrderNamePrice = null;
-            File.Create(@"C:\Temp\Cart.csv").Dispose();
+            OrderNameAndPrice = null;
         }
 
 
@@ -839,7 +837,7 @@ namespace Projektarbetet
             Desserts.SelectedIndex = -1;
             Drinks.SelectedIndex = -1;
             ComboBoxClickItem = null;
-            OrderNamePrice = null;
+            OrderNameAndPrice = null;
         }
     }
 }
