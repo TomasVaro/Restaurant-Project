@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CC6604DA-2A3F-4E05-AF4F-F5EACA605EE7}</ProjectGuid>
+    <ProjectGuid>{1466D72D-2462-4AE4-A637-0C5544F2C57C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Projektarbetet</RootNamespace>
     <AssemblyName>Projektarbetet</AssemblyName>
@@ -64,9 +64,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Pictures\" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="d1.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -100,11 +97,6 @@
     <Content Include="w2.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="MyForm.resx">
-      <DependentUpon>MyForm.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
