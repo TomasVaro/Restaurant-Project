@@ -18,8 +18,7 @@ namespace Projektarbetet
             public string Name;
             public string Description;
         };
-
-
+        
         public ComboBox Starters;
         public ComboBox WarmDishes;
         public ComboBox Desserts;
@@ -39,10 +38,11 @@ namespace Projektarbetet
         public string OrderString;
         public TextBox CustomerDiscountCode;
         public int rndPicture;
+        public TableLayoutPanel Table;
 
         public MyForm()
         {
-            TableLayoutPanel Table = new TableLayoutPanel
+            Table = new TableLayoutPanel
             {
                 RowCount = 12,
                 ColumnCount = 3,
@@ -201,7 +201,7 @@ namespace Projektarbetet
 
 
             // Slumpar fram restaurang-bilderna och lägger i PictureBox
-            rndPicture = new Random().Next(1, 4);
+            rndPicture = new Random().Next(1, 8);
             Picture = new PictureBox
             {
                 Image = Image.FromFile("pic" + rndPicture + ".jpg"),
@@ -231,7 +231,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 Font = new Font("Times New Roman", 14),
                 BackColor = Color.Honeydew
-            };
+            };            
             Table.Controls.Add(add, 1, 9);
             add.Click += AddClick;
 
@@ -245,7 +245,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(remove, 1, 10);
             remove.Click += RemoveClick;
-
+            
 
             Button clearChart = new Button
             {
@@ -255,7 +255,7 @@ namespace Projektarbetet
                 BackColor = Color.AntiqueWhite
             };
             Table.Controls.Add(clearChart, 1, 11);
-            clearChart.Click += ClearChartClick;
+            clearChart.Click += ClearChartClick;            
 
 
             Label orderLabel = new Label
@@ -278,7 +278,7 @@ namespace Projektarbetet
                 ReadOnly = true,
                 BackgroundColor = Color.WhiteSmoke,
                 Font = new Font("Times New Roman", 12),
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
             };
             Table.Controls.Add(OrderList, 2, 2);
             Table.SetRowSpan(OrderList, 7);
@@ -324,19 +324,17 @@ namespace Projektarbetet
             Table.Controls.Add(saveOrder, 2, 11);
             saveOrder.Click += SaveOrderClick;
 
-
             List<Product> listStarters = new List<Product>();
             List<Product> listWarmDishes = new List<Product>();
             List<Product> listDesserts = new List<Product>();
             List<Product> listDrinks = new List<Product>();
 
 
-
             // Splittar produkterna och lägger i 4 olika listor.
             string[] lines = File.ReadAllLines("products.csv");
             foreach (string line in lines)
             {
-                string[] parts = line.Split(',');
+                string[] parts = line.Split(';');
                 try     // Kollar om fel i produktlistan.
                 {
                     string index = parts[0];
@@ -388,7 +386,6 @@ namespace Projektarbetet
             }
 
 
-
             // Lägger till produkterna i dropdowlistorna.
             foreach (Product p in listStarters)
             {
@@ -420,7 +417,7 @@ namespace Projektarbetet
                 {
                     foreach (string cartLine in cartLines)
                     {
-                        string[] cartValues = cartLine.Split(',');  //splittar varje rad i kundvagnen vid kommatecknen i en ny array cartValues
+                        string[] cartValues = cartLine.Split(';');  // Splittar varje rad i kundvagnen vid kommatecknen i en ny array cartValues.
 
                         foreach (Product p in listStarters) // Lägger till priset för varje objekt i kundvagnen till totalSum.
                         {
@@ -462,12 +459,8 @@ namespace Projektarbetet
                     File.Create(@"C:\Temp\Cart.csv").Dispose();
                 }
             }
-
-
             // Lägger till priset i "Pris totalt"-rutan.            
             TotalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
-
-
             // Lägger till antal, namn och pris, från sparade varukorgen, till DataGridView.
             foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
             {
@@ -477,8 +470,7 @@ namespace Projektarbetet
             }
         }
 
-
-        // Raderar texten i drop-down listorna för alla utom den markerade
+        // Raderar texten i drop-down listorna för alla utom den markerade.
         private void StartersClick(object sender, EventArgs e)
         {
             WarmDishes.SelectedIndex = -1;
@@ -505,52 +497,35 @@ namespace Projektarbetet
         }
 
 
-
-        // Raderar texten i Textbox för rabattkoder om man klickar på Textboxen
+        // Raderar texten i Textbox för rabattkoder om man klickar på Textboxen.
         private void DiscountCodeEmtyOnClick(object sender, EventArgs e)
         {
             CustomerDiscountCode.Clear();
         }
 
 
-
-        // Kontrollerar vid tryck på enter om rabattkoden stämmer och räknar i så fall ut rabatten.
+        // Kontrollerar rabattkoden vid tryck på "enter".
         private void CustomerDiscountCodeEnter(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (Char)Keys.Enter)
             {
-                string[] discountCodes = File.ReadAllLines("rabattkoder.csv");
-
-                if (CustomerDiscountCode.Text != "")
-                {
-                    int Counter = 0;
-                    foreach (string line in discountCodes)
-                    {
-                        string[] voucherCodePercentage = line.Split(',');
-                        int percentage = int.Parse(voucherCodePercentage[1]);
-
-                        if (CustomerDiscountCode.Text == voucherCodePercentage[0])
-                        {
-                            MessageBox.Show("Du har angett en rabattkod som ger " + percentage + "% rabatt");
-                            Counter = 1;
-                        }
-                    }
-                    if (Counter == 0)
-                    {
-                        MessageBox.Show("Du har angett en ogiltig rabattkod!");
-                        CustomerDiscountCode.Clear();
-                    }
-                }
+                DiscountCheck();                
             }
+            CustomerDiscountCode.SelectionLength = 6;   // Sätter markören på slutet av TextBox-raden
         }
 
 
-
-        // Kontrollerar vid tryck på OK knappen om rabattkoden stämmer och räknar i så fall ut rabatten. 
+        // Kontrollerar rabattkoden vid tryck på OK knappen. 
         private void DiscountCodeCheckClick(object sender, EventArgs e)
         {
-            string[] discountCodes = File.ReadAllLines("rabattkoder.csv");
+            DiscountCheck();
+        }
 
+
+        // Kontrollerar om rabattkoden stämmer och räknar i så fall ut rabatten.
+        private void DiscountCheck()
+        {
+            string[] discountCodes = File.ReadAllLines("rabattkoder.csv");
             if (CustomerDiscountCode.Text != "")
             {
                 int Counter = 0;
@@ -572,7 +547,6 @@ namespace Projektarbetet
                 }
             }
         }
-
 
 
         // Lägger till bild i PictureBox och beskrivning i DescriptionBox när man väljer från dropdown-listorna.
@@ -608,7 +582,7 @@ namespace Projektarbetet
             string[] lines = File.ReadAllLines("products.csv");
             foreach (string line in lines)
             {
-                string[] parts = line.Split(',');
+                string[] parts = line.Split(';');
                 string index = parts[0];
                 string description = parts[3];
 
@@ -618,7 +592,6 @@ namespace Projektarbetet
                 }
             }
         }
-
 
 
         // Lägger till beställningen till DataGridView.
@@ -656,7 +629,6 @@ namespace Projektarbetet
         }
 
 
-
         // Hämtar namnet och priset på maträtten från DataGridView.
         private void OrderListClick(object sender, EventArgs e)
         {
@@ -666,7 +638,6 @@ namespace Projektarbetet
             OrderPrice = OrderList.CurrentRow.Cells[2].Value.ToString();
             OrderNameAndPrice = orderName + "-" + OrderPrice;
         }
-
 
 
         // Tar bort beställningen från DataGridView.
@@ -744,7 +715,6 @@ namespace Projektarbetet
         }
 
 
-
         // Rensar hela beställningen.
         private void ClearChartClick(object sender, EventArgs e)
         {
@@ -754,7 +724,6 @@ namespace Projektarbetet
             TotalPriceLabel.Text = "Pris totalt:  ";
             OrderNameAndPrice = null;
         }
-
 
 
         // Gör iordning och presenterar kvittot.
@@ -785,6 +754,7 @@ namespace Projektarbetet
                     }
                 }
             }
+            Picture.Image = Image.FromFile("pic8.jpg");
 
             // Kvittot presenteras.
             Font = new Font("Times New Roman", 18);
@@ -799,32 +769,25 @@ namespace Projektarbetet
                 "Välkommen åter!"
                 );
 
-            // Rensar beställningen och återställer skärmen.
-            OrderList.Rows.Clear();
-            TotalOrderDictionary.Clear();
-            TotalPrice = 0;
-            TotalPriceLabel.Text = "Pris totalt:  ";
-            Picture.Image = Image.FromFile("pic" + rndPicture + ".jpg");
-            DescriptionBox.Clear();
-            CustomerDiscountCode.Text = "Skriv in ev. rabattkod här";
-            Starters.SelectedIndex = -1;
-            WarmDishes.SelectedIndex = -1;
-            Desserts.SelectedIndex = -1;
-            Drinks.SelectedIndex = -1;
-            ComboBoxClickItem = null;
-            OrderNameAndPrice = null;
+            ClearAll();
         }
-
 
 
         // Sparar beställningen i en fil.
         private void SaveOrderClick(object sender, EventArgs e)
         {
-            string csvFile = string.Join(Environment.NewLine, TotalOrderDictionary.Select(d => d.Key + "," + d.Value));
+            string csvFile = string.Join(Environment.NewLine, TotalOrderDictionary.Select(d => d.Key + ";" + d.Value));
             System.IO.File.WriteAllText(@"C:\Temp\Cart.csv", csvFile);
+            Picture.Image = Image.FromFile("pic8.jpg");
             MessageBox.Show("Din varukorg är sparad!");
 
-            // Rensar beställningen och återställer skärmen.            
+            ClearAll();
+        }
+        
+
+        // Rensar beställningen och återställer skärmen. 
+        private void ClearAll()
+        {                      
             OrderList.Rows.Clear();
             TotalOrderDictionary.Clear();
             TotalPrice = 0;
