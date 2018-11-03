@@ -39,6 +39,10 @@ namespace Projektarbetet
         public TextBox CustomerDiscountCode;
         public int rndPicture;
         public TableLayoutPanel Table;
+        public List<Product> ListStartersSorted;
+        public List<Product> ListWarmDishesSorted;
+        public List<Product> ListDessertsSorted;
+        public List<Product> ListDrinksSorted;
 
         public MyForm()
         {
@@ -378,6 +382,12 @@ namespace Projektarbetet
                             Description = description
                         });
                     }
+                    // Sorterar maträtterna i prisordning
+                    ListStartersSorted = listStarters.OrderBy(x => x.Price).ToList();
+                    ListWarmDishesSorted = listWarmDishes.OrderBy(x => x.Price).ToList();
+                    ListDessertsSorted = listDesserts.OrderBy(x => x.Price).ToList();
+                    ListDrinksSorted = listDrinks.OrderBy(x => x.Price).ToList();
+
                 }
                 catch
                 {
@@ -387,19 +397,19 @@ namespace Projektarbetet
 
 
             // Lägger till produkterna i dropdowlistorna.
-            foreach (Product p in listStarters)
+            foreach (Product p in ListStartersSorted)
             {
                 Starters.Items.Add(p.Name + " - " + p.Price + " kr");
             };
-            foreach (Product p in listWarmDishes)
+            foreach (Product p in ListWarmDishesSorted)
             {
                 WarmDishes.Items.Add(p.Name + " - " + p.Price + " kr");
             };
-            foreach (Product p in listDesserts)
+            foreach (Product p in ListDessertsSorted)
             {
                 Desserts.Items.Add(p.Name + " - " + p.Price + " kr");
             };
-            foreach (Product p in listDrinks)
+            foreach (Product p in ListDrinksSorted)
             {
                 Drinks.Items.Add(p.Name + " - " + p.Price + " kr");
             }
@@ -419,7 +429,7 @@ namespace Projektarbetet
                     {
                         string[] cartValues = cartLine.Split(';');  // Splittar varje rad i kundvagnen vid kommatecknen i en ny array cartValues.
 
-                        foreach (Product p in listStarters) // Lägger till priset för varje objekt i kundvagnen till totalSum.
+                        foreach (Product p in ListStartersSorted) // Lägger till priset för varje objekt i kundvagnen till totalSum.
                         {
                             if (cartValues[0] == (p.Name + " - " + p.Price + " kr"))
                             {
@@ -428,7 +438,7 @@ namespace Projektarbetet
                                 TotalOrderDictionary[p.Name + " - " + p.Price + " kr"] = int.Parse(cartValues[1]);
                             }
                         }
-                        foreach (Product p in listWarmDishes) // Lägger till priset för varje objekt i kundvagnen till totalSum.
+                        foreach (Product p in ListWarmDishesSorted) // Lägger till priset för varje objekt i kundvagnen till totalSum.
                         {
                             if (cartValues[0] == (p.Name + " - " + p.Price + " kr"))
                             {
@@ -437,7 +447,7 @@ namespace Projektarbetet
                                 TotalOrderDictionary[p.Name + " - " + p.Price + " kr"] = int.Parse(cartValues[1]);
                             }
                         }
-                        foreach (Product p in listDesserts) // Lägger till priset för varje objekt i kundvagnen till TotalPrice.
+                        foreach (Product p in ListDessertsSorted) // Lägger till priset för varje objekt i kundvagnen till TotalPrice.
                         {
                             if (cartValues[0] == (p.Name + " - " + p.Price + " kr"))
                             {
@@ -446,7 +456,7 @@ namespace Projektarbetet
                                 TotalOrderDictionary[p.Name + " - " + p.Price + " kr"] = int.Parse(cartValues[1]);
                             }
                         }
-                        foreach (Product p in listDrinks) // Lägger till priset för varje objekt i kundvagnen till TotalPrice.
+                        foreach (Product p in ListDrinksSorted) // Lägger till priset för varje objekt i kundvagnen till TotalPrice.
                         {
                             if (cartValues[0] == (p.Name + " - " + p.Price + " kr"))
                             {
