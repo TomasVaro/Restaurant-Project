@@ -17,7 +17,7 @@ namespace Projektarbetet
             public string Name;
             public string Description;
         };
-        
+
         public ComboBox Starters;
         public ComboBox WarmDishes;
         public ComboBox Desserts;
@@ -55,7 +55,6 @@ namespace Projektarbetet
             };
             Controls.Add(Table);
             WindowState = FormWindowState.Maximized;
-
 
             Table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
             Table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44));
@@ -235,7 +234,7 @@ namespace Projektarbetet
                 Dock = DockStyle.Fill,
                 Font = new Font("Times New Roman", 14),
                 BackColor = Color.Honeydew
-            };            
+            };
             Table.Controls.Add(add, 1, 9);
             add.Click += AddClick;
 
@@ -249,7 +248,7 @@ namespace Projektarbetet
             };
             Table.Controls.Add(remove, 1, 10);
             remove.Click += RemoveClick;
-            
+
 
             Button clearChart = new Button
             {
@@ -259,7 +258,7 @@ namespace Projektarbetet
                 BackColor = Color.AntiqueWhite
             };
             Table.Controls.Add(clearChart, 1, 11);
-            clearChart.Click += ClearChartClick;            
+            clearChart.Click += ClearChartClick;
 
 
             Label orderLabel = new Label
@@ -328,6 +327,7 @@ namespace Projektarbetet
             Table.Controls.Add(saveOrder, 2, 11);
             saveOrder.Click += SaveOrderClick;
 
+
             ListStarters = new List<Product>();
             ListWarmDishes = new List<Product>();
             ListDesserts = new List<Product>();
@@ -342,59 +342,59 @@ namespace Projektarbetet
                 // Kollar om fel i produktlistan.
                 try
                 {
-                        string index = parts[0];
-                        int price = int.Parse(parts[1]);
-                        string name = parts[2];
-                        string description = parts[3];
+                    string index = parts[0];
+                    int price = int.Parse(parts[1]);
+                    string name = parts[2];
+                    string description = parts[3];
 
-                        if (index.StartsWith("s"))
+                    if (index.StartsWith("s"))
+                    {
+                        ListStarters.Add(new Product
                         {
-                            ListStarters.Add(new Product
-                            {
-                                Price = price,
-                                Name = name,
-                                Description = description
-                            });
-                        }
-                        else if (index.StartsWith("w"))
-                        {
-                            ListWarmDishes.Add(new Product
-                            {
-                                Price = price,
-                                Name = name,
-                                Description = description
-                            });
-                        }
-                        else if (index.StartsWith("d"))
-                        {
-                            ListDesserts.Add(new Product
-                            {
-                                Price = price,
-                                Name = name,
-                                Description = description
-                            });
-                        }
-                        else if (index.StartsWith("f"))
-                        {
-                            ListDrinks.Add(new Product
-                            {
-                                Price = price,
-                                Name = name,
-                                Description = description
-                            });
-                        }
+                            Price = price,
+                            Name = name,
+                            Description = description
+                        });
                     }
+                    else if (index.StartsWith("w"))
+                    {
+                        ListWarmDishes.Add(new Product
+                        {
+                            Price = price,
+                            Name = name,
+                            Description = description
+                        });
+                    }
+                    else if (index.StartsWith("d"))
+                    {
+                        ListDesserts.Add(new Product
+                        {
+                            Price = price,
+                            Name = name,
+                            Description = description
+                        });
+                    }
+                    else if (index.StartsWith("f"))
+                    {
+                        ListDrinks.Add(new Product
+                        {
+                            Price = price,
+                            Name = name,
+                            Description = description
+                        });
+                    }
+                }
                 catch
                 {
                     MessageBox.Show("Fel i produktlistan! Produkterna kommer att visas fel i menyn.");
                 }
             }
 
-            
+
             // Lägger till produkterna i dropdowlistorna.
             foreach (Product p in ListStarters)
             {
-                Starters.Items.Add(p.Name + " - " + p.Price + " kr");                
+                Starters.Items.Add(p.Name + " - " + p.Price + " kr");
             };
             foreach (Product p in ListWarmDishes)
             {
@@ -424,7 +424,7 @@ namespace Projektarbetet
                     {
                         CartValues = cartLine.Split(';');
                         // Adderar priset för varje objekt i kundvagnen till TotalPrice.
-                        foreach (Product p in ListStarters) 
+                        foreach (Product p in ListStarters)
                         {
                             AddToTotalPrice(p);
                         }
@@ -443,8 +443,8 @@ namespace Projektarbetet
                     }
                     File.Create(@"C:\Temp\Cart.csv").Dispose();
                 }
-            }           
-            TotalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
+                TotalPriceLabel.Text = "Pris totalt:  " + TotalPrice + " kr";
+            }
             // Lägger till antal, namn och pris, från sparade varukorgen, till DataGridView.
             foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
             {
@@ -464,6 +464,7 @@ namespace Projektarbetet
                 TotalOrderDictionary[p.Name + " - " + p.Price + " kr"] = int.Parse(CartValues[1]);
             }
         }
+
 
         // Raderar texten i drop-down listorna för alla utom den markerade.
         private void StartersClick(object sender, EventArgs e)
@@ -504,7 +505,7 @@ namespace Projektarbetet
         {
             if (e.KeyChar == (Char)Keys.Enter)
             {
-                DiscountCheck();                
+                DiscountCheck();
             }
             CustomerDiscountCode.SelectionLength = 6;
         }
@@ -553,7 +554,7 @@ namespace Projektarbetet
             // Lägger till rätt bild i PictureBox.
             string indexProducts = "";
             if (c.SelectedIndex != -1)
-            {             
+            {
                 if (sender == Starters)
                 {
                     indexProducts = "s";
@@ -569,7 +570,7 @@ namespace Projektarbetet
                 else
                 {
                     indexProducts = "f";
-                }                
+                }
                 Picture.Image = Image.FromFile(@"C:\Temp\pictures\" + indexProducts + (c.SelectedIndex + 1) + ".jpg");
             }
 
@@ -611,7 +612,7 @@ namespace Projektarbetet
                 string[] OrderArray = ComboBoxClickItem.Split(new char[] { '-' });
                 int price = int.Parse(OrderArray[1].Replace(" kr", string.Empty));
                 TotalPrice += price;
-                TotalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
+                TotalPriceLabel.Text = "Pris totalt:  " + TotalPrice + " kr";
 
                 // Lägger till antal, namn och pris till DataGridView.
                 OrderList.Rows.Clear();
@@ -655,7 +656,7 @@ namespace Projektarbetet
                         // Subtraherar priset från "Pris totalt"-rutan.
                         int price = int.Parse(OrderPrice.Replace(" kr", string.Empty));
                         TotalPrice -= price;
-                        TotalPriceLabel.Text = "Pris totalt:  " + Convert.ToString(TotalPrice) + " kr";
+                        TotalPriceLabel.Text = "Pris totalt:  " + TotalPrice + " kr";
                     }
                 }
                 else
@@ -679,13 +680,13 @@ namespace Projektarbetet
                     OrderArray = OrderString.Split(new char[] { '-' });
                     OrderList.Rows.Add(pair.Value, OrderArray[0], OrderArray[1]);
                 }
-                
+
                 // Om TotalOrderDictionary inte är tom tas den automatiska cellmarkeringen bort i DataGrid View.
                 if (TotalOrderDictionary.Count != 0)
                 {
                     OrderList.CurrentCell.Selected = false;
                 }
-                
+
                 // Sparar markeringen i cellen om inte raden i DataGridView tagits bort.
                 if (DataGridViewRowIndex < TotalOrderDictionary.Count)
                 {
@@ -759,11 +760,11 @@ namespace Projektarbetet
 
             ClearAll();
         }
-        
+
 
         // Rensar beställningen och återställer skärmen. 
         private void ClearAll()
-        {                      
+        {
             OrderList.Rows.Clear();
             TotalOrderDictionary.Clear();
             TotalPrice = 0;
