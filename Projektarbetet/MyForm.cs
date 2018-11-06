@@ -465,6 +465,7 @@ namespace Projektarbetet
             }
         }
 
+
         // Raderar texten i drop-down listorna för alla utom den markerade.
         private void StartersClick(object sender, EventArgs e)
         {
