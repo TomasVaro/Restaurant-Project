@@ -205,7 +205,7 @@ namespace Projektarbetet
             RndPicture = new Random().Next(1, 8);
             Picture = new PictureBox
             {
-                Image = Image.FromFile(@"C:\Temp\restPictures\" + "pic" + RndPicture + ".jpg"),
+                Image = Image.FromFile(@".\restPictures\" + "pic" + RndPicture + ".jpg"),
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Dock = DockStyle.Fill,
                 Width = 150,
@@ -575,7 +575,7 @@ namespace Projektarbetet
                 {
                     indexProducts = "f";
                 }
-                Picture.Image = Image.FromFile(@"C:\Temp\pictures\" + indexProducts + (c.SelectedIndex + 1) + ".jpg");
+                Picture.Image = Image.FromFile(@".\pictures\" + indexProducts + (c.SelectedIndex + 1) + ".jpg");
             }
 
             // Lägger till rätt beskrivning i DescriptionBox.
@@ -616,7 +616,7 @@ namespace Projektarbetet
                 string[] OrderArray = ComboBoxClickItem.Split(new char[] { '-' });
                 int price = int.Parse(OrderArray[1].Replace(" kr", string.Empty));
                 TotalPrice += price;
-                if(TotalPriceWithDiscount == 0)
+                if(Percentage == 0)
                 {
                     TotalPriceLabel.Text = "Pris totalt:  " + TotalPrice + " kr";
                 }
@@ -635,6 +635,10 @@ namespace Projektarbetet
                     OrderList.Rows.Add(pair.Value, OrderArray[0], OrderArray[1]);
                 }
                 OrderList.CurrentCell.Selected = false;
+            }
+            else
+            {
+                MessageBox.Show("Du måste välja en rätt under \"Meny\"!");
             }
         }
 
@@ -704,6 +708,10 @@ namespace Projektarbetet
                     OrderList.CurrentCell.Selected = false;
                 }                
             }
+            else
+            {
+                MessageBox.Show("Det finns inget i beställningen att ta bort!");
+            }
         }
 
 
@@ -765,7 +773,7 @@ namespace Projektarbetet
                         priceInfo = TotalPriceWithDiscount + " SEK" + "\n" + "(Din rabatt " + (TotalPrice * Percentage / 100) + " SEK)";
                     }
                 }
-                Picture.Image = Image.FromFile(@"C:\Temp\restPictures\pic8.jpg");
+                Picture.Image = Image.FromFile(@".\restPictures\pic8.jpg");
 
                 // Kvittot presenteras.
                 MessageBox.Show(
@@ -794,7 +802,7 @@ namespace Projektarbetet
             {
                 string csvFile = string.Join(Environment.NewLine, TotalOrderDictionary.Select(d => d.Key + ";" + d.Value));
                 System.IO.File.WriteAllText(@"C:\Temp\Cart.csv", csvFile);
-                Picture.Image = Image.FromFile(@"C:\Temp\restPictures\pic8.jpg");
+                Picture.Image = Image.FromFile(@".\restPictures\pic8.jpg");
                 MessageBox.Show("Din varukorg är sparad!");
                 ClearAll();
             }
@@ -814,7 +822,7 @@ namespace Projektarbetet
             TotalPriceWithDiscount = 0;
             Percentage = 0;
             TotalPriceLabel.Text = "Pris totalt:  ";
-            Picture.Image = Image.FromFile(@"C:\Temp\restPictures\" + "pic" + RndPicture + ".jpg");
+            Picture.Image = Image.FromFile(@".\restPictures\" + "pic" + RndPicture + ".jpg");
             DescriptionBox.Clear();
             CustomerDiscountCode.Text = "Skriv in ev. rabattkod här";
             Starters.SelectedIndex = -1;
