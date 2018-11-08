@@ -243,7 +243,7 @@ namespace Projektarbetet
                 Text = "Ta bort",
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill,
-                BackColor = System.Drawing.ColorTranslator.FromHtml("#FADBD8")
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#FBEEE6")
             };
             Table.Controls.Add(remove, 1, 10);
             remove.Click += RemoveClick;
@@ -254,7 +254,7 @@ namespace Projektarbetet
                 Text = "Rensa hela beställningen",
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill,
-                BackColor = System.Drawing.ColorTranslator.FromHtml("#FADBD8")
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#FBEEE6")
             };
             Table.Controls.Add(clearChart, 1, 11);
             clearChart.Click += ClearChartClick;
