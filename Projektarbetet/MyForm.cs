@@ -28,6 +28,7 @@ namespace Projektarbetet
         public Dictionary<string, int> TotalOrderDictionary;
         public Label TotalPriceLabel;
         public TextBox CustomerDiscountCode;
+        public Button DiscountCodeCheck;
         public TableLayoutPanel Table;
         public List<Product> ListStarters;
         public List<Product> ListWarmDishes;
@@ -187,11 +188,11 @@ namespace Projektarbetet
             CustomerDiscountCode.Click += DiscountCodeEmtyOnClick;
 
 
-            Button DiscountCodeCheck = new Button
+            DiscountCodeCheck = new Button
             {
                 Text = "OK",
                 Font = new Font("Times New Roman", 12),
-                BackColor = Color.Honeydew,
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3"),
                 AutoSize = true,
                 Width = (int)Text.Length,
                 Dock = DockStyle.None
@@ -231,7 +232,7 @@ namespace Projektarbetet
                 Text = "Lägg till",
                 Dock = DockStyle.Fill,
                 Font = new Font("Times New Roman", 14),
-                BackColor = Color.Honeydew
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3")
             };
             Table.Controls.Add(add, 1, 9);
             add.Click += AddClick;
@@ -242,7 +243,7 @@ namespace Projektarbetet
                 Text = "Ta bort",
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill,
-                BackColor = Color.AntiqueWhite
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#FADBD8")
             };
             Table.Controls.Add(remove, 1, 10);
             remove.Click += RemoveClick;
@@ -253,7 +254,7 @@ namespace Projektarbetet
                 Text = "Rensa hela beställningen",
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill,
-                BackColor = Color.AntiqueWhite
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#FADBD8")
             };
             Table.Controls.Add(clearChart, 1, 11);
             clearChart.Click += ClearChartClick;
@@ -309,7 +310,7 @@ namespace Projektarbetet
                 Text = "Beställ",
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill,
-                BackColor = Color.Honeydew
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3")
             };
             Table.Controls.Add(order, 2, 10);
             order.Click += OrderClick;
@@ -320,7 +321,7 @@ namespace Projektarbetet
                 Text = "Spara beställningen",
                 Font = new Font("Times New Roman", 14),
                 Dock = DockStyle.Fill,
-                BackColor = Color.Honeydew
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3")
             };
             Table.Controls.Add(saveOrder, 2, 11);
             saveOrder.Click += SaveOrderClick;
@@ -450,6 +451,19 @@ namespace Projektarbetet
                 string orderNy = pair.Key;
                 OrderArray = orderNy.Split(new char[] { '-' });
                 OrderList.Rows.Add(pair.Value, OrderArray[0], OrderArray[1]);
+            }
+
+
+            // Slumpar fram om man är den "1000-e" kunden som då får 75% rabatt
+            int rndGuest = new Random().Next(1, 4);
+            if (rndGuest == 1)
+            {
+                MessageBox.Show("Grattis! Du är vår 1000-e gäst och får därmed 75% rabatt på din beställning");
+                Percentage = 75;
+                CustomerDiscountCode.Clear();
+                DiscountCodeCheck.Text = "";
+                DiscountCodeCheck.BackColor = System.Drawing.ColorTranslator.FromHtml("#eeeeee");
+                CustomerDiscountCode.ReadOnly = true;
             }
         }
 
@@ -825,6 +839,8 @@ namespace Projektarbetet
             Picture.Image = Image.FromFile(@".\restPictures\" + "pic" + RndPicture + ".jpg");
             DescriptionBox.Clear();
             CustomerDiscountCode.Text = "Skriv in ev. rabattkod här";
+            DiscountCodeCheck.Text = "OK";
+            DiscountCodeCheck.BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3");
             Starters.SelectedIndex = -1;
             WarmDishes.SelectedIndex = -1;
             Desserts.SelectedIndex = -1;
