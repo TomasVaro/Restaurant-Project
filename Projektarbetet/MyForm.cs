@@ -28,7 +28,7 @@ namespace Projektarbetet
         public Dictionary<string, int> TotalOrderDictionary;
         public Label TotalPriceLabel;
         public TextBox CustomerDiscountCode;
-        public Button DiscountCodeCheck;
+        public Button DiscountCodeOkButton;
         public TableLayoutPanel Table;
         public List<Product> ListStarters;
         public List<Product> ListWarmDishes;
@@ -44,6 +44,7 @@ namespace Projektarbetet
         public string[] CartArray;
         public string[] ProductArray;
         public int Percentage;
+        public string[] DiscountCodes;
 
         public MyForm()
         {
@@ -188,7 +189,7 @@ namespace Projektarbetet
             CustomerDiscountCode.Click += DiscountCodeEmtyOnClick;
 
 
-            DiscountCodeCheck = new Button
+            DiscountCodeOkButton = new Button
             {
                 Text = "OK",
                 Font = new Font("Times New Roman", 12),
@@ -197,8 +198,8 @@ namespace Projektarbetet
                 Width = (int)Text.Length,
                 Dock = DockStyle.None
             };
-            Table.Controls.Add(DiscountCodeCheck, 0, 11);
-            DiscountCodeCheck.Click += DiscountCodeCheckClick;
+            Table.Controls.Add(DiscountCodeOkButton, 0, 11);
+            DiscountCodeOkButton.Click += DiscountCodeCheckClick;
             CustomerDiscountCode.KeyPress += CustomerDiscountCodeEnter;
 
 
@@ -409,7 +410,7 @@ namespace Projektarbetet
             }
 
 
-            // Läser in sparad varukorg till TotalOrderDictionary.
+            // Kontrollerar om det finns en sparad varukorg och läser i så fall in den till TotalOrderDictionary.
             TotalPrice = 0;
             TotalPriceWithDiscount = 0;
             TotalOrderDictionary = new Dictionary<string, int>();
@@ -454,18 +455,29 @@ namespace Projektarbetet
             }
 
 
-            // Slumpar fram om man är den "1000-e" kunden som då får 75% rabatt
-            int rndGuest = new Random().Next(1, 6);
+            // Slumpar fram om man är den "1000-e" kunden som då får 75% rabatt.
+            int rndGuest = new Random().Next(1, 11);
             if (rndGuest == 1)
             {
                 MessageBox.Show("Grattis! Du är vår 1000-e gäst och får därmed 75% rabatt på din beställning");
                 Percentage = 75;
                 CustomerDiscountCode.Clear();
-                DiscountCodeCheck.Text = "";
-                DiscountCodeCheck.BackColor = System.Drawing.ColorTranslator.FromHtml("#eeeeee");
+                DiscountCodeOkButton.Text = "";
+                DiscountCodeOkButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#eeeeee");
                 CustomerDiscountCode.ReadOnly = true;
             }
-        }
+
+            // Kontrollerar om det finns fel i discountcode.csv
+            DiscountCodes = File.ReadAllLines("discountcodes.csv");
+            foreach (string line in DiscountCodes)
+            {
+                string[] discountCodeArray = line.Split(',');
+                if (discountCodeArray[0].Length != 6 || discountCodeArray[1] == "" )
+                    {
+                        MessageBox.Show("Det är fel i filen med rabattkoder! Måste åtgärdas");
+                    }
+                }
+            }
 
         // Metod som adderar priset för varje objekt i kundvagnen till TotalPrice.
         private void AddToTotalPrice(Product p)
@@ -517,7 +529,7 @@ namespace Projektarbetet
         {
             if (e.KeyChar == (Char)Keys.Enter)
             {
-                DiscountCheck();
+                DiscountCodeCheck();
             }
             CustomerDiscountCode.SelectionLength = 6;
         }
@@ -526,23 +538,23 @@ namespace Projektarbetet
         // Kontrollerar rabattkoden vid tryck på OK knappen. 
         private void DiscountCodeCheckClick(object sender, EventArgs e)
         {
-            DiscountCheck();
+            DiscountCodeCheck();
         }
 
 
         // Metod som Kontrollerar om rabattkoden stämmer och räknar i så fall ut rabatten.
-        private void DiscountCheck()
+        private void DiscountCodeCheck()
         {
-            string[] discountCodes = File.ReadAllLines("rabattkoder.csv");
+            //DiscountCodes = File.ReadAllLines("discountcodes.csv");
             if (CustomerDiscountCode.Text != "")
             {
                 int counter = 0;
-                foreach (string line in discountCodes)
+                foreach (string line in DiscountCodes)
                 {
-                    string[] voucherCodePercentage = line.Split(',');
-                    Percentage = int.Parse(voucherCodePercentage[1]);
+                    string[] discountCodePercentage = line.Split(',');
+                    Percentage = int.Parse(discountCodePercentage[1]);
 
-                    if (CustomerDiscountCode.Text == voucherCodePercentage[0])
+                    if (CustomerDiscountCode.Text == discountCodePercentage[0])
                     {
                         MessageBox.Show("Du har angett en rabattkod som ger " + Percentage + "% rabatt");
                         counter = 1;
@@ -749,7 +761,7 @@ namespace Projektarbetet
                 string priceInfo = TotalPrice + " SEK";
 
                 // Kontrollerar om rabattkoden stämmer och räknar i så fall ut rabatten.            
-                string[] discountCodes = File.ReadAllLines("rabattkoder.csv");
+                string[] discountCodes = File.ReadAllLines("discountcodes.csv");
                 if (CustomerDiscountCode.Text != "" && CustomerDiscountCode.Text != "Skriv in ev. rabattkod här" || Percentage != 0)
                 {
                     if (Percentage == 0)
@@ -840,8 +852,8 @@ namespace Projektarbetet
             DescriptionBox.Clear();
             CustomerDiscountCode.Text = "Skriv in ev. rabattkod här";
             CustomerDiscountCode.ReadOnly = false;
-            DiscountCodeCheck.Text = "OK";
-            DiscountCodeCheck.BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3");
+            DiscountCodeOkButton.Text = "OK";
+            DiscountCodeOkButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3");
             Starters.SelectedIndex = -1;
             WarmDishes.SelectedIndex = -1;
             Desserts.SelectedIndex = -1;

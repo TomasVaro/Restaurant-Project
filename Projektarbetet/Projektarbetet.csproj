@@ -59,7 +59,7 @@
     <None Include="products.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="rabattkoder.csv">
+    <None Include="discountcodes.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
