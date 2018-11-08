@@ -206,7 +206,7 @@ namespace Projektarbetet
             RndPicture = new Random().Next(1, 8);
             Picture = new PictureBox
             {
-                Image = Image.FromFile(@".\restPictures\" + "pic" + RndPicture + ".jpg"),
+                Image = Image.FromFile(@"restPictures\" + "pic" + RndPicture + ".jpg"),
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Dock = DockStyle.Fill,
                 Width = 150,
@@ -455,7 +455,7 @@ namespace Projektarbetet
 
 
             // Slumpar fram om man är den "1000-e" kunden som då får 75% rabatt
-            int rndGuest = new Random().Next(1, 4);
+            int rndGuest = new Random().Next(1, 6);
             if (rndGuest == 1)
             {
                 MessageBox.Show("Grattis! Du är vår 1000-e gäst och får därmed 75% rabatt på din beställning");
@@ -589,7 +589,7 @@ namespace Projektarbetet
                 {
                     indexProducts = "f";
                 }
-                Picture.Image = Image.FromFile(@".\pictures\" + indexProducts + (c.SelectedIndex + 1) + ".jpg");
+                Picture.Image = Image.FromFile(@"pictures\" + indexProducts + (c.SelectedIndex + 1) + ".jpg");
             }
 
             // Lägger till rätt beskrivning i DescriptionBox.
@@ -787,7 +787,7 @@ namespace Projektarbetet
                         priceInfo = TotalPriceWithDiscount + " SEK" + "\n" + "(Din rabatt " + (TotalPrice * Percentage / 100) + " SEK)";
                     }
                 }
-                Picture.Image = Image.FromFile(@".\restPictures\pic8.jpg");
+                Picture.Image = Image.FromFile(@"restPictures\pic8.jpg");
 
                 // Kvittot presenteras.
                 MessageBox.Show(
@@ -816,7 +816,7 @@ namespace Projektarbetet
             {
                 string csvFile = string.Join(Environment.NewLine, TotalOrderDictionary.Select(d => d.Key + ";" + d.Value));
                 System.IO.File.WriteAllText(@"C:\Temp\Cart.csv", csvFile);
-                Picture.Image = Image.FromFile(@".\restPictures\pic8.jpg");
+                Picture.Image = Image.FromFile(@"restPictures\pic8.jpg");
                 MessageBox.Show("Din varukorg är sparad!");
                 ClearAll();
             }
@@ -836,9 +836,10 @@ namespace Projektarbetet
             TotalPriceWithDiscount = 0;
             Percentage = 0;
             TotalPriceLabel.Text = "Pris totalt:  ";
-            Picture.Image = Image.FromFile(@".\restPictures\" + "pic" + RndPicture + ".jpg");
+            Picture.Image = Image.FromFile(@"restPictures\" + "pic" + RndPicture + ".jpg");
             DescriptionBox.Clear();
             CustomerDiscountCode.Text = "Skriv in ev. rabattkod här";
+            CustomerDiscountCode.ReadOnly = false;
             DiscountCodeCheck.Text = "OK";
             DiscountCodeCheck.BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3");
             Starters.SelectedIndex = -1;
