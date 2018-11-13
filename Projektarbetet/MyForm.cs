@@ -11,6 +11,7 @@ namespace Projektarbetet
 {
     class MyForm : Form
     {
+        #region Classes and InstanceVariabels
         public class Product
         {
             public int Price;
@@ -45,17 +46,21 @@ namespace Projektarbetet
         public string[] ProductArray;
         public int Percentage;
         public string[] DiscountCodes;
+        #endregion
 
         public MyForm()
         {
+
+            #region TableLayout
+            WindowState = FormWindowState.Maximized;
+            Text = "Fiskrestaurang - av Novak och Tomas";
             Table = new TableLayoutPanel
             {
                 RowCount = 12,
                 ColumnCount = 3,
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Fill
             };
             Controls.Add(Table);
-            WindowState = FormWindowState.Maximized;
             Table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
             Table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44));
             Table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28));
@@ -326,8 +331,9 @@ namespace Projektarbetet
             };
             Table.Controls.Add(saveOrder, 2, 11);
             saveOrder.Click += SaveOrderClick;
+            #endregion
 
-
+            #region Produktinläsning
             ListStarters = new List<Product>();
             ListWarmDishes = new List<Product>();
             ListDesserts = new List<Product>();
@@ -408,8 +414,9 @@ namespace Projektarbetet
             {
                 Drinks.Items.Add(p.Name + " - " + p.Price + " kr");
             }
+            #endregion
 
-
+            #region Check Chart & DiscountCodes
             // Kontrollerar om det finns en sparad varukorg och läser i så fall in den till TotalOrderDictionary.
             TotalPrice = 0;
             TotalPriceWithDiscount = 0;
@@ -477,8 +484,9 @@ namespace Projektarbetet
                         MessageBox.Show("Det är fel i filen med rabattkoder! Måste åtgärdas");
                     }
                 }
-            }
-
+            #endregion
+        }
+        #region Methods and EventHandlers
         // Metod som adderar priset för varje objekt i kundvagnen till TotalPrice.
         private void AddToTotalPrice(Product p)
         {
@@ -488,7 +496,6 @@ namespace Projektarbetet
                 TotalOrderDictionary[p.Name + " - " + p.Price + " kr"] = int.Parse(CartArray[1]);
             }
         }
-
 
         // Raderar texten i drop-down listorna för alla utom den markerade.
         private void StartersClick(object sender, EventArgs e)
@@ -669,7 +676,7 @@ namespace Projektarbetet
         }
 
 
-        // Hämtar namnet och priset på maträtten från DataGridView.
+        // Hämtar namnet och priset på maträtten från DataGridView för "ta bort" funktionen
         private void OrderListClick(object sender, EventArgs e)
         {
             string orderName = OrderList.CurrentRow.Cells[1].Value.ToString();
@@ -861,5 +868,6 @@ namespace Projektarbetet
             ComboBoxClickItem = null;
             OrderNameAndPrice = null;
         }
+        #endregion
     }
 }
