@@ -51,8 +51,9 @@ namespace Projektarbetet
 
         public MyForm()
         {
-
             #region GuiLayout
+            InitLayout();
+            Shown += MyFormShown;
             WindowState = FormWindowState.Maximized;
             Text = "Fiskrestaurang - av Novak och Tomas";
             Table = new TableLayoutPanel
@@ -331,7 +332,7 @@ namespace Projektarbetet
                 BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3")
             };
             Table.Controls.Add(saveOrder, 2, 11);
-            saveOrder.Click += SaveOrderClick;
+            saveOrder.Click += SaveOrderClick;           
             #endregion
 
             #region Produktinläsning
@@ -461,21 +462,7 @@ namespace Projektarbetet
                 OrderArray = orderNy.Split(new char[] { '-' });
                 OrderList.Rows.Add(pair.Value, OrderArray[0], OrderArray[1]);
             }
-
-
-            // Slumpar fram om man är den "1000-e" kunden som då får 75% rabatt.
-            int rndGuest = new Random().Next(1, 11);
-            if (rndGuest == 1)
-            {
-                MessageBox.Show("Grattis! Du är vår 1000-e gäst och får därmed 75% rabatt på din beställning");
-                Percentage = 75;
-                CustomerDiscountCode.Text = Percentage + "% rabatt";
-                CustomerDiscountCode.BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3");
-                CustomerDiscountCode.ForeColor = System.Drawing.ColorTranslator.FromHtml("#FF2200");
-                DiscountCodeOkButton.Text = "";
-                DiscountCodeOkButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#eeeeee");
-                CustomerDiscountCode.ReadOnly = true;
-            }
+           
 
             // Kontrollerar om det finns fel i discountcode.csv
             DiscountCodes = File.ReadAllLines("discountcodes.csv");
@@ -490,6 +477,29 @@ namespace Projektarbetet
             #endregion
         }
         #region Methods and EventHandlers
+        // Ritar upp MessageBox efter att GUI-t är klart
+        private void MyFormShown(object sender, EventArgs e)
+        {
+            // Skriver välkomstmeddelande.
+            System.Threading.Thread.Sleep(1);
+            string[] userNameArray = Environment.UserName.Split('.');
+            MessageBox.Show("Välkommen till fiskrestaurangen Sea Shark, " + userNameArray[0].First().ToString().ToUpper() + userNameArray[0].Remove(0, 1).ToLower() + "!");
+
+            // Slumpar fram om man är den "1000-e" kunden som då får 75% rabatt.
+            int rndGuest = new Random().Next(1, 11);
+            if (rndGuest == 1)
+            {
+                MessageBox.Show("Grattis " + userNameArray[0].First().ToString().ToUpper() + userNameArray[0].Remove(0, 1).ToLower() + "!" + "\n" + "Du är vår 1000-e gäst och får därmed 75% rabatt på din beställning");
+                Percentage = 75;
+                CustomerDiscountCode.Text = Percentage + "% rabatt";
+                CustomerDiscountCode.BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3");
+                CustomerDiscountCode.ForeColor = System.Drawing.ColorTranslator.FromHtml("#FF2200");
+                DiscountCodeOkButton.Text = "";
+                DiscountCodeOkButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#eeeeee");
+                CustomerDiscountCode.ReadOnly = true;
+            }
+        }
+
         // Metod som adderar priset för varje objekt i kundvagnen till TotalPrice.
         private void AddToTotalPrice(Product p)
         {
