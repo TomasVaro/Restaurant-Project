@@ -633,7 +633,7 @@ namespace Projektarbetet
         // Lägger till beställningen till TotalOrderDictinary och TotalPrice samt presenterar den i DataGridView.
         private void AddClick(object sender, EventArgs e)
         {
-            if (ComboBoxClickItem != null)
+            if (ComboBoxClickItem != null && ComboBoxClickItem != "")
             {
                 // Lägger till beställningen till TotalOrderDictionary.
                 if (TotalOrderDictionary.ContainsKey(ComboBoxClickItem))
