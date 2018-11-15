@@ -46,7 +46,7 @@ namespace Projektarbetet
         public string[] ProductArray;
         public int Percentage;
         public string[] DiscountCodes;
-        public int IndexClearAll;
+        public string PriceInfo;
         #endregion
 
         public MyForm()
@@ -482,11 +482,11 @@ namespace Projektarbetet
             foreach (string line in DiscountCodes)
             {
                 string[] discountCodeArray = line.Split(',');
-                if (discountCodeArray[0].Length != 6 || discountCodeArray[1] == "" )
-                    {
-                        MessageBox.Show("Det är fel i filen med rabattkoder! Måste åtgärdas");
-                    }
+                if (discountCodeArray[0].Length != 6 || discountCodeArray[1] == "")
+                {
+                    MessageBox.Show("Det är fel i filen med rabattkoder! Måste åtgärdas");
                 }
+            }
             #endregion
         }
         #region Methods and EventHandlers
@@ -530,7 +530,7 @@ namespace Projektarbetet
         // Raderar texten i Textbox för rabattkoder om man klickar på Textboxen.
         private void DiscountCodeEmtyOnClick(object sender, EventArgs e)
         {
-            if(Percentage == 0)
+            if (Percentage == 0)
             {
                 CustomerDiscountCode.Clear();
             }
@@ -542,7 +542,7 @@ namespace Projektarbetet
         {
             if (e.KeyChar == (Char)Keys.Enter && Percentage == 0)
             {
-                DiscountCodeCheck();
+                DiscountCodeCheck(0);
             }
         }
 
@@ -550,15 +550,15 @@ namespace Projektarbetet
         // Kontrollerar rabattkoden vid tryck på OK knappen. 
         private void DiscountCodeCheckClick(object sender, EventArgs e)
         {
-            if(Percentage == 0)
+            if (Percentage == 0)
             {
-                DiscountCodeCheck();
+                DiscountCodeCheck(0);
             }
         }
 
 
         // Metod som kontrollerar om rabattkoden stämmer och räknar i så fall ut rabatten.
-        private void DiscountCodeCheck()
+        private void DiscountCodeCheck(int i)
         {
             if (CustomerDiscountCode.Text != "" && CustomerDiscountCode.Text != "Skriv in ev. rabattkod här")
             {
@@ -569,7 +569,7 @@ namespace Projektarbetet
 
                     if (CustomerDiscountCode.Text == discountCodePercentage[0])
                     {
-                    Percentage = int.Parse(discountCodePercentage[1]);
+                        Percentage = int.Parse(discountCodePercentage[1]);
                         MessageBox.Show("Du har angett en rabattkod som ger " + Percentage + "% rabatt");
                         CustomerDiscountCode.Text = Percentage + "% rabatt";
                         CustomerDiscountCode.BackColor = System.Drawing.ColorTranslator.FromHtml("#D5F5E3");
@@ -578,10 +578,14 @@ namespace Projektarbetet
                         DiscountCodeOkButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#eeeeee");
                         CustomerDiscountCode.ReadOnly = true;
                         counter = 1;
-                        if(TotalPrice != 0)
+                        if (TotalPrice != 0)
                         {
                             TotalPriceWithDiscount = TotalPrice - (TotalPrice * Percentage / 100);
                             TotalPriceLabel.Text = "Pris totalt:         " + TotalPrice + " kr" + "\n" + "Pris inkl rabatt:  " + TotalPriceWithDiscount + " kr";
+                            if(i == 1)
+                            {
+                                PriceInfo = TotalPriceWithDiscount + " SEK" + "\n" + "(Din rabatt " + (TotalPrice * Percentage / 100) + " SEK)";
+                            }
                         }
                         break;
                     }
@@ -662,7 +666,7 @@ namespace Projektarbetet
                 string[] OrderArray = ComboBoxClickItem.Split(new char[] { '-' });
                 int price = int.Parse(OrderArray[1].Replace(" kr", string.Empty));
                 TotalPrice += price;
-                if(Percentage == 0)
+                if (Percentage == 0)
                 {
                     TotalPriceLabel.Text = "Pris totalt:  " + TotalPrice + " kr";
                 }
@@ -730,7 +734,7 @@ namespace Projektarbetet
                 {
                     MessageBox.Show("Markera under \"Beställning\" den vara du vill ta bort!");
                     OrderList.CurrentCell.Selected = false; // Tar bort automatiska cellmarkeringen i DatGridView
-                }                
+                }
 
                 // Om antalet av en beställning blir 0 så tas den bort i TotalOrderDictioanry.
                 foreach (var item in TotalOrderDictionary.Where(KeyValuePair => KeyValuePair.Value == 0).ToList())
@@ -746,12 +750,12 @@ namespace Projektarbetet
                     OrderArray = pair.Key.Split(new char[] { '-' });
                     OrderList.Rows.Add(pair.Value, OrderArray[0], OrderArray[1]);
                 }
-                
+
                 // Om TotalOrderDictionary inte är tom tas den automatiska cellmarkeringen bort i DataGrid View.
                 if (TotalOrderDictionary.Count != 0)
                 {
                     OrderList.CurrentCell.Selected = false;
-                }                
+                }
             }
             else
             {
@@ -763,60 +767,37 @@ namespace Projektarbetet
         // Rensar hela beställningen utom rabattkoden vid tryck på rensa knappen.
         private void ClearChartClick(object sender, EventArgs e)
         {
-            IndexClearAll = 1;
-            ClearAll();
+            ClearAll(1);
         }
 
 
         // Gör iordning och presenterar kvittot.
         private void OrderClick(object sender, EventArgs e)
         {
-            if(TotalOrderDictionary.Count != 0)
+            if (TotalOrderDictionary.Count == 0)
+            {
+                MessageBox.Show("Du har inte gjort någon beställning ännu!");
+            }
+            else
             {
                 string receipt = "";
                 foreach (KeyValuePair<string, int> pair in TotalOrderDictionary)
                 {
                     receipt += pair.Value + " st. " + pair.Key + "\n";
                 }
-                string priceInfo = TotalPrice + " SEK";
+                PriceInfo = TotalPrice + " SEK";
 
-                // Kontrollerar om rabattkoden stämmer och räknar i så fall ut rabatten.            
-                string[] discountCodes = File.ReadAllLines("discountcodes.csv");
+                // Kontrollerar om rabattkoden stämmer och räknar i så fall ut rabatten.
                 if (CustomerDiscountCode.Text != "" && CustomerDiscountCode.Text != "Skriv in ev. rabattkod här" || Percentage != 0)
                 {
                     if (Percentage == 0)
                     {
-                        int counter = 0;
-                        foreach (string line in discountCodes)
-                        {
-                            string[] voucherCodePercentage = line.Split(',');
-                            Percentage = int.Parse(voucherCodePercentage[1]);
-
-                            if (CustomerDiscountCode.Text == voucherCodePercentage[0])
-                            {
-                                MessageBox.Show("Du har angett en rabattkod som ger " + Percentage + "% rabatt");
-                                counter = 1;
-                                if (TotalPrice != 0)
-                                {
-                                    TotalPriceWithDiscount = TotalPrice - (TotalPrice * Percentage / 100);
-                                    TotalPriceLabel.Text = "Pris totalt:         " + TotalPrice + " kr" + "\n" + "Pris inkl rabatt:  " + TotalPriceWithDiscount + " kr";
-                                    priceInfo = TotalPriceWithDiscount + " SEK" + "\n" + "(Din rabatt " + (TotalPrice * Percentage / 100) + " SEK)";
-
-                                }
-                                break;
-                            }
-                        }
-                        CustomerDiscountCode.Clear();
-                        if (counter == 0)
-                        {
-                            MessageBox.Show("Du har angett en ogiltig rabattkod!");
-                            CustomerDiscountCode.Clear();
-                        }
+                        DiscountCodeCheck(1);
                     }
                     else
                     {
                         TotalPriceWithDiscount = TotalPrice - (TotalPrice * Percentage / 100);
-                        priceInfo = TotalPriceWithDiscount + " SEK" + "\n" + "(Din rabatt " + (TotalPrice * Percentage / 100) + " SEK)";
+                        PriceInfo = TotalPriceWithDiscount + " SEK" + "\n" + "(Din rabatt " + (TotalPrice * Percentage / 100) + " SEK)";
                     }
                 }
                 Picture.Image = Image.FromFile(@"restPictures\pic8.jpg");
@@ -829,15 +810,10 @@ namespace Projektarbetet
                     "----------------------------" + "\n" +
                     receipt + "\n" +
                     "**************************" + "\n" +
-                    "ATT BETALA: " + priceInfo + "\n\n" +
+                    "ATT BETALA: " + PriceInfo + "\n\n" +
                     "Välkommen åter!"
                     );
-                IndexClearAll = 0;
-                ClearAll();                
-            }
-            else
-            {
-                MessageBox.Show("Du har inte gjort någon beställning ännu!");
+                ClearAll(0);
             }
         }
 
@@ -845,14 +821,13 @@ namespace Projektarbetet
         // Sparar beställningen i en fil.
         private void SaveOrderClick(object sender, EventArgs e)
         {
-            if(TotalOrderDictionary.Count != 0)
+            if (TotalOrderDictionary.Count != 0)
             {
                 string csvFile = string.Join(Environment.NewLine, TotalOrderDictionary.Select(d => d.Key + ";" + d.Value));
                 System.IO.File.WriteAllText(@"C:\Temp\Cart.csv", csvFile);
                 Picture.Image = Image.FromFile(@"restPictures\pic8.jpg");
                 MessageBox.Show("Din varukorg är sparad!");
-                IndexClearAll = 0;
-                ClearAll();
+                ClearAll(0);
             }
             else
             {
@@ -862,7 +837,7 @@ namespace Projektarbetet
 
 
         // Rensar beställningen och återställer skärmen. 
-        private void ClearAll()
+        private void ClearAll(int i)
         {
             OrderList.Rows.Clear();
             TotalOrderDictionary.Clear();
@@ -877,7 +852,7 @@ namespace Projektarbetet
             Drinks.SelectedIndex = -1;
             ComboBoxClickItem = null;
             OrderNameAndPrice = null;
-            if(IndexClearAll == 0)
+            if (i == 0)
             {
                 Percentage = 0;
                 CustomerDiscountCode.BackColor = DefaultBackColor;
