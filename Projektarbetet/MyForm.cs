@@ -52,6 +52,12 @@ namespace Projektarbetet
         public MyForm()
         {
             #region GuiLayout
+            Directory.CreateDirectory(@"C:\Temp");
+            string path = @"C:\Temp\Cart.csv";
+            if (!File.Exists(path))
+            {
+                File.Create(path).Dispose();                
+            }
             InitLayout();
             Shown += MyFormShown;
             WindowState = FormWindowState.Maximized;
