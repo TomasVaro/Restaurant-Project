@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projektarbetet", "Projektarbetet\Projektarbetet.csproj", "{1466D72D-2462-4AE4-A637-0C5544F2C57C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projektarbete Restaurang", "Projektarbetet\Projektarbete Restaurang.csproj", "{1466D72D-2462-4AE4-A637-0C5544F2C57C}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RestaurantInstaller", "RestaurantInstaller\RestaurantInstaller.vdproj", "{0A855FD6-ECF8-4082-B4F1-5E65E440493D}"
 EndProject
